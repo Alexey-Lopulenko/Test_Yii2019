@@ -118,8 +118,6 @@
                                                                             ]);
                                                                     }
                                                                 }
-
-
                                                             }
                                                         if(Yii::$app->request->post('place_id')){
 
