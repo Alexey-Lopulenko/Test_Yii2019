@@ -17,7 +17,6 @@ class TicketController extends Controller
     public function actionIndex(){
 
 
-
         $model = new ByForm();
         $user = User::find()->all();
         $film = Film::find()->all();
