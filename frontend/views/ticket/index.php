@@ -4,6 +4,8 @@
     use yii\widgets\Pjax;
 
 $sessionActive = Yii::$app->session;
+
+
     ?>
 
 <h1 class="text-center">Film</h1>
@@ -22,14 +24,15 @@ $sessionActive = Yii::$app->session;
               </div>
           </div>
       </div>
-      <?php
-      Modal::begin([
+      <?php Modal::begin([
               'size' =>'modal-lg',
-          'header' => '<h2 class="text-center">'.$film->title.'</h2>',
-          'id' => $film['id'],
-//                             'footer' => Yii::$app->request->post('date')? $this->render('post'): "",
+              'header' => '<h2 class="text-center">'.$film->title.'</h2>',
+              'id' => $film['id'],
+//            'footer' => Yii::$app->request->post('date')? $this->render('post'): "",
       ]);
+        $sessionActive['id_film_by_order'] = $film->id;
       ?>
+  <div id="modal_window">
 
       <img style="width: 150px; height: 150px"
            src="<?php
@@ -45,6 +48,7 @@ $sessionActive = Yii::$app->session;
       /** @var \app\models\Date $date */
       foreach ($date as $dates){
           if($film->id == $dates->film_id){
+
               $date_arr[$dates->id]=$dates->date_session;
           }
       }?>
@@ -63,6 +67,9 @@ $sessionActive = Yii::$app->session;
       ]);
       if(Yii::$app->request->post('cancel_id')){
           $sessionActive['place_by_order'] = [];
+          $sessionActive['id_film_by_order']=[];
+          $sessionActive['id_date_by_order']=[];
+          $sessionActive['id_session_by_order']=[];
       }
       ?>
 
@@ -72,9 +79,13 @@ $sessionActive = Yii::$app->session;
       foreach ($session as $sessions){
           $session_price = Yii::$app->request->post('date')==$sessions->date_id ? $sessions->price."₴" : "";
           //соответствие сессии выбранной дате
+
+          $sessionActive['id_date_by_order'] = Yii::$app->request->post('date');
+
           $time_session = Yii::$app->request->post('date')==$sessions->date_id ? $sessions->time : null;
           echo $time_session ? Html::a($sessions->time."<br>".$session_price, ['/ticket/index'], [
                   'class'=>'btn btn-md btn-warning',
+                  'style'=>'height: 47px;',
               'data' => [
                       'method' => 'post',
                   'params' => [
@@ -84,7 +95,7 @@ $sessionActive = Yii::$app->session;
 
       }
       $session_id_by_order = Yii::$app->request->post('session_id');
-
+        $sessionActive['id_session_by_order'] = $session_id_by_order;
       echo "<pre>";
       print_r(Yii::$app->request->post());
       /** @var \app\models\Ticket $ticket */
@@ -146,7 +157,7 @@ $sessionActive = Yii::$app->session;
                           }
 //                          запись мест в ($sessionActive['place_by_order']) при клике на место place_id=>place_id
                           if(Yii::$app->request->post('place_id')){
-                              if (count($sessionActive['place_by_order']) < 3 ){
+                              if (count($sessionActive['place_by_order']) < 5 ){
                                   $sessionActive['place_by_order'] +=[
                                       Yii::$app->request->post('place_id')=>Yii::$app->request->post('place_id')
                                   ];
@@ -164,18 +175,73 @@ $sessionActive = Yii::$app->session;
                       ?>
                   </div>
               <?php endforeach;?>
+              <?php
+              echo  Html::a('Enter_order', ['/ticket/index'], [
+                  'class'=> 'btn btn-md btn-danger',
+                  'data' =>
+                      [
+                          'method' => 'post',
+                          'params' => [
+                              'enter_order' => true,
+                              'session_id'=>$session_id_by_order,
+                          ],
+                      ]
+              ]);
+              if(Yii::$app->request->post('enter_order')){
+                 echo 'Enter_order';
+              }
+              ?>
           </div>
       <?php endif;?>
       <?= Html::endForm()?>
 
-<!--      --><?php
-//        echo "<pre>";
-//        var_dump($sessionActive['place_by_order']);
-//        echo "</pre>";
-//      ?>
+      <?php
+           echo "<pre>";
+         print_r($sessionActive['id_film_by_order']);
+         echo "<br>";
+         print_r($sessionActive['id_date_by_order']);
+         echo "<br>";
+         print_r($sessionActive['id_session_by_order']);
+         echo "<br>";
+         print_r($sessionActive['place_by_order']);
+           echo "</pre>";
+      ?>
 
       <?php Pjax::end();?>
-      <?php Modal::end(); ?>
+  </div>
+      <?php
+      $js = <<<JS
+window.onload = function () {
+    document.body.onclick = function (e) {
+        e = e || event;
+        target = e.target || e.srcElement;
+        if (target.tagName == "DIV" && target.id == "modal_window") {
+            console.log("SUCCESS");
+        } else {
+             console.log("FAILED");
+        }
+    }
+}
+
+JS;
+      $this->registerJs($js);
+
+      Modal::end(); ?>
+
   <?php endforeach;?>
 
 
+<?php
+echo "<pre>";
+foreach ($user as $user){
+    print_r($user->id);
+    echo "<br>";
+    print_r($user->username);
+    echo "<br>";
+    print_r($user->email);
+    echo "<br>";
+    print_r($user->order_id);
+    echo "<hr><br>";
+}
+echo "</pre>";
+?>

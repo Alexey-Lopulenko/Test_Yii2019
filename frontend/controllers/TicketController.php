@@ -18,7 +18,7 @@ class TicketController extends Controller
 
 
         $model = new ByForm();
-        $user = User::find()->all();
+        $user = User::find()->where(['status' => 10])->all();
         $film = Film::find()->all();
         $date = Date::find()->where(['status'=>'active'])->all();
         $session = Session::find()->where(['status_session' => 'active'])->all();
