@@ -32,7 +32,6 @@ $sessionActive = Yii::$app->session;
       ]);
         $sessionActive['id_film_by_order'] = $film->id;
       ?>
-  <div id="modal_window">
 
       <img style="width: 150px; height: 150px"
            src="<?php
@@ -208,40 +207,14 @@ $sessionActive = Yii::$app->session;
       ?>
 
       <?php Pjax::end();?>
-  </div>
-      <?php
-      $js = <<<JS
-window.onload = function () {
-    document.body.onclick = function (e) {
-        e = e || event;
-        target = e.target || e.srcElement;
-        if (target.tagName == "DIV" && target.id == "modal_window") {
-            console.log("SUCCESS");
-        } else {
-             console.log("FAILED");
-        }
-    }
-}
-
-JS;
-      $this->registerJs($js);
-
-      Modal::end(); ?>
+  <div id="testt">2019</div>
+      <?php Modal::end(); ?>
 
   <?php endforeach;?>
 
 
 <?php
 echo "<pre>";
-foreach ($user as $user){
-    print_r($user->id);
-    echo "<br>";
-    print_r($user->username);
-    echo "<br>";
-    print_r($user->email);
-    echo "<br>";
-    print_r($user->order_id);
-    echo "<hr><br>";
-}
+
 echo "</pre>";
 ?>
