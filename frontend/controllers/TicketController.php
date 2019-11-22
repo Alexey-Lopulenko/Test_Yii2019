@@ -60,10 +60,6 @@ class TicketController extends Controller
 
         $ses = Session::find()->with('date')->where(['id' => $_SESSION['id_session_by_order']])->all();
 
-        if($_SESSION['id_session_by_order']){
-            echo "<br><br><br><br><br><br><br><br><br><br>good";
-        }
-
         return $this->render('cabinet', ['order'=>$order,  'ses'=>$ses]);
     }
 

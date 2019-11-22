@@ -197,17 +197,17 @@ if(!(isset($sessionActive['place_by_order']))){
       <?php endif;?>
       <?= Html::endForm()?>
 
-      <?php
-           echo "<pre>";
-            print_r($sessionActive['id_film_by_order']);
-         echo "<br>";
-            print_r($sessionActive['id_date_by_order']);
-         echo "<br>";
-            print_r($sessionActive['id_session_by_order']);
-         echo "<br>";
-            print_r($sessionActive['place_by_order']);
-         echo "<br>";
-      ?>
+<!--      --><?php
+//           echo "<pre>";
+//            print_r($sessionActive['id_film_by_order']);
+//         echo "<br>";
+//            print_r($sessionActive['id_date_by_order']);
+//         echo "<br>";
+//            print_r($sessionActive['id_session_by_order']);
+//         echo "<br>";
+//            print_r($sessionActive['place_by_order']);
+//         echo "<br>";
+//      ?>
 
       <?php Pjax::end();?>
 
