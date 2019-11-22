@@ -7,6 +7,7 @@ $sessionActive = Yii::$app->session;
 
 if(!(isset($sessionActive['place_by_order']))){
     $sessionActive['place_by_order']=[];
+    $sessionActive['ticket_id_by_order']=[];
 }
 
 
@@ -90,9 +91,9 @@ if(!(isset($sessionActive['place_by_order']))){
           echo $time_session ? Html::a($sessions->time."<br>".$session_price, ['/ticket/index'], [
                   'class'=>'btn btn-md btn-warning',
                   'style'=>'height: 47px;',
-              'data' => [
+                  'data' => [
                       'method' => 'post',
-                  'params' => [
+                      'params' => [
                           'session_id' => $sessions->id,
                   ],]
           ]):"";
@@ -138,7 +139,7 @@ if(!(isset($sessionActive['place_by_order']))){
                                        //если билет продан отключить возможность выбора
                                       $class_btn = $tickets->status=="on_sale" ? 'btn btn-md btn-success' : 'btn btn-primary btn-md disabled';
 
-                                       //смена стиля места при попадании его id в $sessionActive['place_by_order'](нажатие на ячейку места)
+                                        //смена стиля места при попадании его id в $sessionActive['place_by_order'](нажатие на ячейку места)
                                         if(isset($sessionActive['place_by_order'][$places->id])){
                                             $class_btn = 'btn btn-md btn-danger';
                                             $status_place = 0;
@@ -150,9 +151,10 @@ if(!(isset($sessionActive['place_by_order']))){
                                               [
                                                       'method' => 'post',
                                                       'params' => [
-                                                              'place_id' => $places->id,
+                                                              'ticket_id' => $tickets->id,
                                                               'session_id' =>$session_id_by_order,
                                                               'status_place' => $status_place,
+
                                                         ],
                                               ]
                                       ]);
@@ -160,17 +162,17 @@ if(!(isset($sessionActive['place_by_order']))){
                               }
                           }
 //                          запись мест в ($sessionActive['place_by_order']) при клике на место place_id=>place_id
-                          if(Yii::$app->request->post('place_id')){
+                          if(Yii::$app->request->post('ticket_id')){
                               if (count($sessionActive['place_by_order']) < 5 ){
                                   $sessionActive['place_by_order'] +=[
-                                      Yii::$app->request->post('place_id')=>Yii::$app->request->post('place_id')
+                                      Yii::$app->request->post('ticket_id')=>Yii::$app->request->post('ticket_id')
                                   ];
                               }
                           }
                             //удаление мест с сессии
                           if(Yii::$app->request->post('status_place')==0)
                           {
-                              unset($_SESSION['place_by_order'][Yii::$app->request->post('place_id')]);
+                              unset($_SESSION['place_by_order'][Yii::$app->request->post('ticket_id')]);
                           }
                           ?>
 
@@ -197,15 +199,14 @@ if(!(isset($sessionActive['place_by_order']))){
 
       <?php
            echo "<pre>";
-         print_r($sessionActive['id_film_by_order']);
+            print_r($sessionActive['id_film_by_order']);
          echo "<br>";
-         print_r($sessionActive['id_date_by_order']);
+            print_r($sessionActive['id_date_by_order']);
          echo "<br>";
-         print_r($sessionActive['id_session_by_order']);
+            print_r($sessionActive['id_session_by_order']);
          echo "<br>";
-         print_r($sessionActive['place_by_order']);
+            print_r($sessionActive['place_by_order']);
          echo "<br>";
-
       ?>
 
       <?php Pjax::end();?>
@@ -215,16 +216,3 @@ if(!(isset($sessionActive['place_by_order']))){
   <?php endforeach;?>
 
 
-<?php
-echo "<pre>";
-print_r($sessionActive['id_film_by_order']);
-echo "<br>";
-print_r($sessionActive['id_date_by_order']);
-echo "<br>";
-print_r($sessionActive['id_session_by_order']);
-echo "<br>";
-print_r($sessionActive['place_by_order']);
-echo "<br>";
-
-echo "</pre>";
-?>

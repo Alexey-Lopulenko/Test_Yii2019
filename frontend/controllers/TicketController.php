@@ -35,7 +35,7 @@ class TicketController extends Controller
     public function actionCabinet()
     {
 
-        $user = User::find()->all();
+
 
         $order = new Order();
 
@@ -47,16 +47,24 @@ class TicketController extends Controller
 
 
 
-        if($order->load(Yii::$app->request->post('execute'))){
-            if($order->save(false)){
-                Yii::$app->session->setFlash('success', 'Покупка оформлена');
-                return $this->refresh();
-            }else{
-                Yii::$app->session->setFlash('error','Ошибка');
-            }
+//        if($order->load(Yii::$app->request->post('execute'))){
+//            if($order->save(false)){
+//                Yii::$app->session->setFlash('success', 'Покупка оформлена');
+//                return $this->refresh();
+//            }else{
+//                Yii::$app->session->setFlash('error','Ошибка');
+//            }
+//        }
+
+//        $film = Film::find()->with('')->where(['id' => $_SESSION['id_film_by_order']])->all();
+
+        $ses = Session::find()->with('date')->where(['id' => $_SESSION['id_session_by_order']])->all();
+
+        if($_SESSION['id_session_by_order']){
+            echo "<br><br><br><br><br><br><br><br><br><br>good";
         }
 
-        return $this->render('cabinet', ['user'=>$user, 'order'=>$order]);
+        return $this->render('cabinet', ['order'=>$order,  'ses'=>$ses]);
     }
 
 
