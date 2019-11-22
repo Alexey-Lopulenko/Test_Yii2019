@@ -25,7 +25,10 @@ $sessionActive = Yii::$app->session;
             echo "<pre>";
 
         /** @var \app\models\Session $ses */
-        print_r($ses);
+       foreach ($ses as $s){
+           print_r($s->date);
+       }
+        echo "<br>";
             print_r($sessionActive['id_film_by_order']);
             echo "<br>";
             print_r($sessionActive['id_date_by_order']);

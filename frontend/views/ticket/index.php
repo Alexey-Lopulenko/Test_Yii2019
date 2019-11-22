@@ -185,7 +185,7 @@ if(!(isset($sessionActive['place_by_order']))){
 
                 if(count($sessionActive['place_by_order']) >0){
                     if(isset(Yii::$app->user->identity->id)){
-                        echo Html::a('Enter order', ['/ticket/cabinet'], ['class' => 'btn btn-primary']);
+                        echo Html::a('Continue order', ['/ticket/cabinet'], ['class' => 'btn btn-primary']);
 
                     }else{
                         echo Html::a('Login', ['/site/login'], ['class' => 'btn btn-danger']);

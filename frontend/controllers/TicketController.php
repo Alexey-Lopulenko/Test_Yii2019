@@ -8,11 +8,10 @@ use app\models\Row;
 use app\models\Ticket;
 use yii\web\Controller;
 use frontend\models\ByForm;
-use app\models\User;
 use app\models\Film;
 use app\models\Date;
 use app\models\Session;
-use Yii;
+
 
 class TicketController extends Controller
 {
@@ -56,12 +55,11 @@ class TicketController extends Controller
 //            }
 //        }
 
-//        $film = Film::find()->with('')->where(['id' => $_SESSION['id_film_by_order']])->all();
+
 
         $ses = Session::find()->with('date')->where(['id' => $_SESSION['id_session_by_order']])->all();
 
         return $this->render('cabinet', ['order'=>$order,  'ses'=>$ses]);
     }
-
 
 }
