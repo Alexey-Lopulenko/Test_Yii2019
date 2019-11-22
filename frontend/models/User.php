@@ -46,7 +46,7 @@ class User extends \yii\db\ActiveRecord
             [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
             [['order_id'], 'unique'],
-            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
+            [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::TicketController(), 'targetAttribute' => ['order_id' => 'id']],
         ];
     }
 
@@ -75,7 +75,7 @@ class User extends \yii\db\ActiveRecord
      */
     public function getOrders()
     {
-        return $this->hasMany(Order::className(), ['user_id' => 'id']);
+        return $this->hasMany(Order::TicketController(), ['user_id' => 'id']);
     }
 
     /**
@@ -83,6 +83,6 @@ class User extends \yii\db\ActiveRecord
      */
     public function getOrder()
     {
-        return $this->hasOne(Order::className(), ['id' => 'order_id']);
+        return $this->hasOne(Order::TicketController(), ['id' => 'order_id']);
     }
 }

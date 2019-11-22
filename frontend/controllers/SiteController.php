@@ -90,7 +90,9 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            //при регистрации редирект на страницу личного кабинета (тест,изменить)
+            return $this->redirect('index.php?r=ticket%2Fcabinet',302);
+//            $this->goBack();
         } else {
             $model->password = '';
 

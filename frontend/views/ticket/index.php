@@ -5,6 +5,10 @@
 
 $sessionActive = Yii::$app->session;
 
+if(!(isset($sessionActive['place_by_order']))){
+    $sessionActive['place_by_order']=[];
+}
+
 
     ?>
 
@@ -25,6 +29,7 @@ $sessionActive = Yii::$app->session;
           </div>
       </div>
       <?php Modal::begin([
+
               'size' =>'modal-lg',
               'header' => '<h2 class="text-center">'.$film->title.'</h2>',
               'id' => $film['id'],
@@ -77,8 +82,8 @@ $sessionActive = Yii::$app->session;
       /** @var \app\models\Session $session */
       foreach ($session as $sessions){
           $session_price = Yii::$app->request->post('date')==$sessions->date_id ? $sessions->price."₴" : "";
-          //соответствие сессии выбранной дате
 
+          //соответствие сессии выбранной дате
           $sessionActive['id_date_by_order'] = Yii::$app->request->post('date');
 
           $time_session = Yii::$app->request->post('date')==$sessions->date_id ? $sessions->time : null;
@@ -130,10 +135,10 @@ $sessionActive = Yii::$app->session;
                               $status_place = 1;
                               if($places->row_id==$rows->id && $tickets->place_id == $places->id){
                                   if($tickets->session_id == $session_id_by_order){
-                                      //если билет продан отключить возможность выбора
+                                       //если билет продан отключить возможность выбора
                                       $class_btn = $tickets->status=="on_sale" ? 'btn btn-md btn-success' : 'btn btn-primary btn-md disabled';
 
-                                      //смена стиля места при попадании его id в $sessionActive['place_by_order'](нажатие на ячейку места)
+                                       //смена стиля места при попадании его id в $sessionActive['place_by_order'](нажатие на ячейку места)
                                         if(isset($sessionActive['place_by_order'][$places->id])){
                                             $class_btn = 'btn btn-md btn-danger';
                                             $status_place = 0;
@@ -148,7 +153,7 @@ $sessionActive = Yii::$app->session;
                                                               'place_id' => $places->id,
                                                               'session_id' =>$session_id_by_order,
                                                               'status_place' => $status_place,
-                                                  ],
+                                                        ],
                                               ]
                                       ]);
                                   }
@@ -160,7 +165,7 @@ $sessionActive = Yii::$app->session;
                                   $sessionActive['place_by_order'] +=[
                                       Yii::$app->request->post('place_id')=>Yii::$app->request->post('place_id')
                                   ];
-                              }else $limit_ticket = 'Limit Dude!';
+                              }
                           }
                             //удаление мест с сессии
                           if(Yii::$app->request->post('status_place')==0)
@@ -175,21 +180,17 @@ $sessionActive = Yii::$app->session;
                   </div>
               <?php endforeach;?>
               <?php
-              echo  Html::a('Enter_order', ['/ticket/index'], [
-                  'class'=> 'btn btn-md btn-danger',
-                  'data' =>
-                      [
-                          'method' => 'post',
-                          'params' => [
-                              'enter_order' => true,
-                              'session_id'=>$session_id_by_order,
-                          ],
-                      ]
-              ]);
-              if(Yii::$app->request->post('enter_order')){
-                 echo 'Enter_order';
-              }
+
+                if(count($sessionActive['place_by_order']) >0){
+                    if(isset(Yii::$app->user->identity->id)){
+                        echo Html::a('Enter order', ['/ticket/cabinet'], ['class' => 'btn btn-primary']);
+
+                    }else{
+                        echo Html::a('Login', ['/site/login'], ['class' => 'btn btn-danger']);
+                    }
+                }
               ?>
+
           </div>
       <?php endif;?>
       <?= Html::endForm()?>
@@ -203,11 +204,12 @@ $sessionActive = Yii::$app->session;
          print_r($sessionActive['id_session_by_order']);
          echo "<br>";
          print_r($sessionActive['place_by_order']);
-           echo "</pre>";
+         echo "<br>";
+
       ?>
 
       <?php Pjax::end();?>
-  <div id="testt">2019</div>
+
       <?php Modal::end(); ?>
 
   <?php endforeach;?>
@@ -215,6 +217,14 @@ $sessionActive = Yii::$app->session;
 
 <?php
 echo "<pre>";
+print_r($sessionActive['id_film_by_order']);
+echo "<br>";
+print_r($sessionActive['id_date_by_order']);
+echo "<br>";
+print_r($sessionActive['id_session_by_order']);
+echo "<br>";
+print_r($sessionActive['place_by_order']);
+echo "<br>";
 
 echo "</pre>";
 ?>
