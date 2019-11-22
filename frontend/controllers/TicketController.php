@@ -41,7 +41,7 @@ class TicketController extends Controller
 //        $order->user_id = '6';
 //        $order->date_id='2';
 //        $order ->session_id='2';
-//        $order->ticket_id = '9';
+//        $order->ticket_id = '9'
 //        $order->save(false);
 
 
