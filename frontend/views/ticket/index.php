@@ -104,11 +104,11 @@ if(!(isset($sessionActive['place_by_order']))){
       echo "<pre>";
       print_r(Yii::$app->request->post());
       /** @var \app\models\Ticket $ticket */
-      $test_i = 0;//количество билетов
+      $number_of_tickets = 0;//количество билетов
       foreach ($ticket as $tickets){
-          $test_i +=Yii::$app->request->post('session_id')==$tickets->session_id ? 1 :0;
+          $number_of_tickets += Yii::$app->request->post('session_id') == $tickets->session_id ? 1 : 0;
       }
-      echo "количество билетов:".$test_i."<br>";
+      echo "количество билетов:" . $number_of_tickets . "<br>";
       echo "</pre>";
       ?>
 
@@ -127,7 +127,7 @@ if(!(isset($sessionActive['place_by_order']))){
               <?php /** @var \app\models\Row $row */
               foreach ($row as $rows):?>
                   <div class="content text-center" style="margin-top: 12px">
-                      <?= $tickets->session_id == $session_id_by_order?'<strong>Ряд №'.$rows->id.'</strong>':'<strong>Билетов нет</strong>';?>
+                      <?= $number_of_tickets > 0 ? '<strong>Ряд №' . $rows->id . '</strong>' : '<strong>Билетов нет</strong>'; ?>
                       <?php
                       /** @var \app\models\Place $place */
                       foreach ($place as $places):?>
@@ -140,7 +140,7 @@ if(!(isset($sessionActive['place_by_order']))){
                                       $class_btn = $tickets->status=="on_sale" ? 'btn btn-md btn-success' : 'btn btn-primary btn-md disabled';
 
                                         //смена стиля места при попадании его id в $sessionActive['place_by_order'](нажатие на ячейку места)
-                                        if(isset($sessionActive['place_by_order'][$places->id])){
+                                      if (isset($sessionActive['place_by_order'][$tickets->id])) {
                                             $class_btn = 'btn btn-md btn-danger';
                                             $status_place = 0;
                                         }
@@ -154,7 +154,6 @@ if(!(isset($sessionActive['place_by_order']))){
                                                               'ticket_id' => $tickets->id,
                                                               'session_id' =>$session_id_by_order,
                                                               'status_place' => $status_place,
-
                                                         ],
                                               ]
                                       ]);
@@ -169,7 +168,7 @@ if(!(isset($sessionActive['place_by_order']))){
                                   ];
                               }
                           }
-                            //удаление мест с сессии
+                          //удаление мест из сессии
                           if(Yii::$app->request->post('status_place')==0)
                           {
                               unset($_SESSION['place_by_order'][Yii::$app->request->post('ticket_id')]);
@@ -183,14 +182,17 @@ if(!(isset($sessionActive['place_by_order']))){
               <?php endforeach;?>
               <?php
 
-                if(count($sessionActive['place_by_order']) >0){
+              //вывод навигации для продолжения покупки
+              if (count($sessionActive['place_by_order']) > 0 && $number_of_tickets > 0) {
                     if(isset(Yii::$app->user->identity->id)){
                         echo Html::a('Continue order', ['/ticket/cabinet'], ['class' => 'btn btn-primary']);
 
                     }else{
                         echo Html::a('Login', ['/site/login'], ['class' => 'btn btn-danger']);
                     }
-                }
+              } else {
+                  echo "Click in place";
+              }
               ?>
 
           </div>

@@ -11,10 +11,13 @@ use Yii;
  * @property int $place_id
  * @property string $status
  * @property int $order_id
+ * @property int $session_id
  *
  * @property Order[] $orders
- * @property Place $place
+ * @property Session $session
  * @property Order $order
+ * @property Place $place
+ * @property Session $session0
  */
 class Ticket extends \yii\db\ActiveRecord
 {
@@ -32,11 +35,13 @@ class Ticket extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['place_id', 'order_id'], 'integer'],
+            [['place_id', 'order_id', 'session_id'], 'integer'],
             [['status'], 'required'],
             [['status'], 'string', 'max' => 50],
-            [['place_id'], 'exist', 'skipOnError' => true, 'targetClass' => Place::className(), 'targetAttribute' => ['place_id' => 'id']],
+            [['session_id'], 'exist', 'skipOnError' => true, 'targetClass' => Session::className(), 'targetAttribute' => ['session_id' => 'id']],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
+            [['place_id'], 'exist', 'skipOnError' => true, 'targetClass' => Place::className(), 'targetAttribute' => ['place_id' => 'id']],
+            [['session_id'], 'exist', 'skipOnError' => true, 'targetClass' => Session::className(), 'targetAttribute' => ['session_id' => 'id']],
         ];
     }
 
@@ -50,6 +55,7 @@ class Ticket extends \yii\db\ActiveRecord
             'place_id' => 'Place ID',
             'status' => 'Status',
             'order_id' => 'Order ID',
+            'session_id' => 'Session ID',
         ];
     }
 
@@ -64,9 +70,9 @@ class Ticket extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPlace()
+    public function getSession()
     {
-        return $this->hasOne(Place::className(), ['id' => 'place_id']);
+        return $this->hasOne(Session::className(), ['id' => 'session_id']);
     }
 
     /**
@@ -75,5 +81,21 @@ class Ticket extends \yii\db\ActiveRecord
     public function getOrder()
     {
         return $this->hasOne(Order::className(), ['id' => 'order_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPlace()
+    {
+        return $this->hasOne(Place::className(), ['id' => 'place_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSession0()
+    {
+        return $this->hasOne(Session::className(), ['id' => 'session_id']);
     }
 }

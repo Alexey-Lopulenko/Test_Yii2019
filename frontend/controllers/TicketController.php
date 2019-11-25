@@ -2,6 +2,8 @@
 
 
 namespace frontend\controllers;
+
+use app\models\DataByOrder;
 use app\models\Order;
 use app\models\Place;
 use app\models\Row;
@@ -27,13 +29,11 @@ class TicketController extends Controller
         $row = Row::find()->all();
 
 
-
         return $this->render('index', ['model' => $model, 'film' =>$film, 'date'=>$date, 'session'=>$session, 'ticket'=>$ticket, 'place'=>$place, 'row'=>$row]) ;
     }
 
     public function actionCabinet()
     {
-
 
 
         $order = new Order();
@@ -54,9 +54,16 @@ class TicketController extends Controller
 //            }
 //        }
 
-        $ses = Session::find()->with('date')->where(['id' => $_SESSION['id_session_by_order']])->all();
 
-        return $this->render('cabinet', ['order'=>$order,  'ses'=>$ses]);
+        $dates = Date::find()->with('film')->where(['id' => $_SESSION['id_session_by_order']])->all();
+
+//        $films = Film::find()->where(['id' => $_SESSION['id_film_by_order']])->all();
+
+        $sessions = Session::find()->where(['id' => $_SESSION['id_session_by_order']])->all();
+
+        $tickets = Ticket::find()->with('place')->where(['id' => $_SESSION['place_by_order']])->all();
+
+        return $this->render('cabinet', ['order' => $order, 'dates' => $dates, 'sessions' => $sessions, 'tickets' => $tickets]);
     }
 
 }
