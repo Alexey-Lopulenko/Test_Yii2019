@@ -1,4 +1,6 @@
 <?php
+
+use yii\helpers\Html;
 $sessionActive = Yii::$app->session;
 ?>
 
@@ -22,12 +24,13 @@ $sessionActive = Yii::$app->session;
 
     /** @var \app\models\Date $dates */
     foreach ($dates as $date) {
+        echo "<strong> Дата: </strong>" . $date->date_session;
         echo "<div class=\"col-md-4 text-left\">";
         echo '<img style="width: 250px; height: 250px;"  src="' . $date->film->logo_img . '" alt="' . $date->film->title . '"></div>';
         echo "<div class=\"col-md-8 text-center\"><strong>Фильм: </strong>" . $date->film->title;
         echo '<div class="col-md-8 text-center">';
         echo "<br><strong>Описание: </strong>" . $date->film->description . "</div>";
-        echo "<strong> Дата: </strong>" . $date->date_session;
+
             }
     echo '</div>';
 
@@ -60,14 +63,22 @@ $sessionActive = Yii::$app->session;
     ?>
 </table>
 
+    <?= Html::a('Enter', ['/ticket/cabinet'], [
+        'class' => 'btn btn-md btn-primary',
+        'data' => [
+            'method' => 'post',
+            'params' => [
+                'enter_order' => true,
+            ],]
+    ]) ?>
+
+
 </div>
 </div>
     </div>
 
-    <!--        --><?php
-//            echo "<pre>";
-//                foreach ($dates as $date){
-//                   print_r($date->film->title);
-//                }
-//            echo "</pre>";
-//        ?>
+<?php
+echo "<pre>";
+print_r(Yii::$app->request->post());
+echo "</pre>";
+?>

@@ -5,6 +5,15 @@
 
 $sessionActive = Yii::$app->session;
 
+echo "<pre>";
+$places = $sessionActive->get('place_by_order');
+print_r($places);
+
+echo "</pre>";
+$sessionActive->remove('place_by_order.9');
+echo "<pre>";
+print_r($_SESSION);
+echo "</pre>";
 if(!(isset($sessionActive['place_by_order']))){
     $sessionActive['place_by_order']=[];
     $sessionActive['ticket_id_by_order']=[];
@@ -199,17 +208,12 @@ if(!(isset($sessionActive['place_by_order']))){
       <?php endif;?>
       <?= Html::endForm()?>
 
-<!--      --><?php
-//           echo "<pre>";
-//            print_r($sessionActive['id_film_by_order']);
-//         echo "<br>";
-//            print_r($sessionActive['id_date_by_order']);
-//         echo "<br>";
-//            print_r($sessionActive['id_session_by_order']);
-//         echo "<br>";
-//            print_r($sessionActive['place_by_order']);
-//         echo "<br>";
-//      ?>
+      <?php
+      echo "<pre>";
+      echo date("Y-m-d H:i:s");
+      echo "</pre>";
+
+      ?>
 
       <?php Pjax::end();?>
 

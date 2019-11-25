@@ -3,7 +3,7 @@
 
 namespace frontend\controllers;
 
-use app\models\DataByOrder;
+
 use app\models\Order;
 use app\models\Place;
 use app\models\Row;
@@ -13,6 +13,8 @@ use frontend\models\ByForm;
 use app\models\Film;
 use app\models\Date;
 use app\models\Session;
+use Yii;
+
 
 
 class TicketController extends Controller
@@ -36,14 +38,6 @@ class TicketController extends Controller
     {
 
 
-        $order = new Order();
-
-//        $order->user_id = '6';
-//        $order->date_id='2';
-//        $order ->session_id='2';
-//        $order->ticket_id = '9'
-//        $order->save(false);
-
 
 //        if($order->load(Yii::$app->request->post('execute'))){
 //            if($order->save(false)){
@@ -56,14 +50,27 @@ class TicketController extends Controller
 
 
         $dates = Date::find()->with('film')->where(['id' => $_SESSION['id_session_by_order']])->all();
-
-//        $films = Film::find()->where(['id' => $_SESSION['id_film_by_order']])->all();
-
         $sessions = Session::find()->where(['id' => $_SESSION['id_session_by_order']])->all();
-
         $tickets = Ticket::find()->with('place')->where(['id' => $_SESSION['place_by_order']])->all();
 
-        return $this->render('cabinet', ['order' => $order, 'dates' => $dates, 'sessions' => $sessions, 'tickets' => $tickets]);
+
+        if (Yii::$app->request->post()) {
+
+            foreach ($tickets as $ticket) {
+                $order = new Order();
+                $order->user_id = (int)Yii::$app->user->identity->id;
+                $order->date_id = (int)$_SESSION['id_date_by_order'];
+                $order->session_id = (int)$_SESSION['id_session_by_order'];
+                $order->ticket_id = (int)$ticket->id;
+                $order->created_at = 2019;
+                $order->updated_at = 2019;
+                $order->save(true);
+            }
+
+        }
+
+
+        return $this->render('cabinet', ['dates' => $dates, 'sessions' => $sessions, 'tickets' => $tickets]);
     }
 
 }
