@@ -7,16 +7,16 @@ $sessionActive = Yii::$app->session;
 
 echo "<pre>";
 $places = $sessionActive->get('place_by_order');
-print_r($places);
 
 echo "</pre>";
-$sessionActive->remove('place_by_order.9');
+//$sessionActive->remove('place_by_order');
 echo "<pre>";
 print_r($_SESSION);
 echo "</pre>";
 if(!(isset($sessionActive['place_by_order']))){
     $sessionActive['place_by_order']=[];
     $sessionActive['ticket_id_by_order']=[];
+
 }
 
 
@@ -148,7 +148,7 @@ if(!(isset($sessionActive['place_by_order']))){
                                        //если билет продан отключить возможность выбора
                                       $class_btn = $tickets->status=="on_sale" ? 'btn btn-md btn-success' : 'btn btn-primary btn-md disabled';
 
-                                        //смена стиля места при попадании его id в $sessionActive['place_by_order'](нажатие на ячейку места)
+                                      //смена стиля и статуса места при попадании его id в $sessionActive['place_by_order'](нажатие на ячейку места)
                                       if (isset($sessionActive['place_by_order'][$tickets->id])) {
                                             $class_btn = 'btn btn-md btn-danger';
                                             $status_place = 0;
@@ -158,12 +158,12 @@ if(!(isset($sessionActive['place_by_order']))){
                                               'class'=> $class_btn,
                                           'data' =>
                                               [
-                                                      'method' => 'post',
-                                                      'params' => [
-                                                              'ticket_id' => $tickets->id,
-                                                              'session_id' =>$session_id_by_order,
-                                                              'status_place' => $status_place,
-                                                        ],
+                                                  'method' => 'post',
+                                                  'params' => [
+                                                      'ticket_id' => $tickets->id,
+                                                      'session_id' => $session_id_by_order,
+                                                      'status_place' => $status_place,
+                                                  ],
                                               ]
                                       ]);
                                   }
@@ -177,6 +177,7 @@ if(!(isset($sessionActive['place_by_order']))){
                                   ];
                               }
                           }
+
                           //удаление мест из сессии
                           if(Yii::$app->request->post('status_place')==0)
                           {
@@ -196,7 +197,7 @@ if(!(isset($sessionActive['place_by_order']))){
                     if(isset(Yii::$app->user->identity->id)){
                         echo Html::a('Continue order', ['/ticket/cabinet'], ['class' => 'btn btn-primary']);
 
-                    }else{
+                    } else {
                         echo Html::a('Login', ['/site/login'], ['class' => 'btn btn-danger']);
                     }
               } else {
@@ -210,7 +211,7 @@ if(!(isset($sessionActive['place_by_order']))){
 
       <?php
       echo "<pre>";
-      echo date("Y-m-d H:i:s");
+      $sessionActive['place_by_order'];
       echo "</pre>";
 
       ?>
