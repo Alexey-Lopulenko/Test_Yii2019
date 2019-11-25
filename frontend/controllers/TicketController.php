@@ -44,7 +44,6 @@ class TicketController extends Controller
 //        $order->ticket_id = '9'
 //        $order->save(false);
 
-//dede/
 
 //        if($order->load(Yii::$app->request->post('execute'))){
 //            if($order->save(false)){
@@ -54,8 +53,6 @@ class TicketController extends Controller
 //                Yii::$app->session->setFlash('error','Ошибка');
 //            }
 //        }
-
-
 
         $ses = Session::find()->with('date')->where(['id' => $_SESSION['id_session_by_order']])->all();
 
