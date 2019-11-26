@@ -2,6 +2,10 @@
 
 namespace backend\controllers;
 
+use app\models\Date;
+use app\models\Session;
+use app\models\Ticket;
+use app\models\User;
 use Yii;
 use app\models\Order;
 use yii\data\ActiveDataProvider;
@@ -65,6 +69,10 @@ class OrderController extends Controller
     public function actionCreate()
     {
         $model = new Order();
+        $users_id = User::find()->all();
+        $dates_id = Date::find()->where(['status' => 'active'])->all();
+        $sessions = Session::find()->all();
+        $tickets = Ticket::find()->where(['status' => 'on_sale'])->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -72,6 +80,10 @@ class OrderController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'users_id' => $users_id,
+            'dates_id' => $dates_id,
+            'sessions' => $sessions,
+            'tickets' => $tickets,
         ]);
     }
 
