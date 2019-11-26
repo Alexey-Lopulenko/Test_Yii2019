@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Order */
@@ -33,11 +34,14 @@ use yii\helpers\ArrayHelper;
 
     $ticket_id = ArrayHelper::map($tickets, 'id', 'id');
     $params_ticket_id = [
-        'prompt' => 'Ticket id'
+        'prompt' => 'Ticket id',
+//        'multiple' => true,
     ];
     ?>
-
-    <?php $form = ActiveForm::begin(); ?>
+    <?php Pjax::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'id' => 'get_order'
+    ]); ?>
 
 
     <?= $form->field($model, 'user_id')->dropDownList($user_id, $params_user_id) ?>
@@ -57,5 +61,28 @@ use yii\helpers\ArrayHelper;
     </div>
 
     <?php ActiveForm::end(); ?>
+    <?php Pjax::end(); ?>
+
+
+    <?php
+    $js = <<<JS
+     $('#get_order').on('click', function() {
+       $.ajax({
+       url:'index.php?r=order/create',
+       data:{test: '123'},
+       type: 'POST',
+           success: function(res) {
+             console.log(res);
+       },
+           error: function() {
+             alert('Error!');
+          }
+       })
+     });
+JS;
+    $this->registerJs($js);
+    ?>
+
+
 
 </div>

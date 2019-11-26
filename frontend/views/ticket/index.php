@@ -98,7 +98,6 @@ if(!(isset($sessionActive['place_by_order']))){
                           'session_id' => $sessions->id,
                   ],]
           ]):"";
-
       }
       $session_id_by_order = Yii::$app->request->post('session_id');
         $sessionActive['id_session_by_order'] = $session_id_by_order;
@@ -181,7 +180,6 @@ if(!(isset($sessionActive['place_by_order']))){
                   </div>
               <?php endforeach;?>
               <?php
-
               //вывод навигации для продолжения покупки
               if (count($sessionActive['place_by_order']) > 0 && $number_of_tickets > 0) {
                     if(isset(Yii::$app->user->identity->id)){

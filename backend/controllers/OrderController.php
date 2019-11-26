@@ -75,7 +75,7 @@ class OrderController extends Controller
         $tickets = Ticket::find()->where(['status' => 'on_sale'])->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['order']);//, 'id' => $model->id
         }
 
         return $this->render('create', [

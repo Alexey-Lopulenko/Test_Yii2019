@@ -26,4 +26,16 @@ $this->params['breadcrumbs'][] = $this->title;
         'tickets' => $tickets,
     ]) ?>
 
+
+
+    <?php
+
+    $request = Yii::$app->request;
+    if ($request->isAjax) {
+        echo 'Good!';
+    } else {
+        echo 'no';
+    }
+
+    ?>
 </div>
