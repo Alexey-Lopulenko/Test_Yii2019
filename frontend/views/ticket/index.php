@@ -5,14 +5,7 @@
 
 $sessionActive = Yii::$app->session;
 
-echo "<pre>";
-$places = $sessionActive->get('place_by_order');
 
-echo "</pre>";
-//$sessionActive->remove('place_by_order');
-echo "<pre>";
-print_r($_SESSION);
-echo "</pre>";
 if(!(isset($sessionActive['place_by_order']))){
     $sessionActive['place_by_order']=[];
     $sessionActive['ticket_id_by_order']=[];
@@ -42,8 +35,7 @@ if(!(isset($sessionActive['place_by_order']))){
 
               'size' =>'modal-lg',
               'header' => '<h2 class="text-center">'.$film->title.'</h2>',
-              'id' => $film['id'],
-//            'footer' => Yii::$app->request->post('date')? $this->render('post'): "",
+          'id' => $film['id']
       ]);
         $sessionActive['id_film_by_order'] = $film->id;
       ?>
@@ -110,15 +102,13 @@ if(!(isset($sessionActive['place_by_order']))){
       }
       $session_id_by_order = Yii::$app->request->post('session_id');
         $sessionActive['id_session_by_order'] = $session_id_by_order;
-      echo "<pre>";
-      print_r(Yii::$app->request->post());
+
       /** @var \app\models\Ticket $ticket */
       $number_of_tickets = 0;//количество билетов
       foreach ($ticket as $tickets){
           $number_of_tickets += Yii::$app->request->post('session_id') == $tickets->session_id ? 1 : 0;
       }
-      echo "количество билетов:" . $number_of_tickets . "<br>";
-      echo "</pre>";
+
       ?>
 
 
@@ -208,16 +198,7 @@ if(!(isset($sessionActive['place_by_order']))){
           </div>
       <?php endif;?>
       <?= Html::endForm()?>
-
-      <?php
-      echo "<pre>";
-      $sessionActive['place_by_order'];
-      echo "</pre>";
-
-      ?>
-
       <?php Pjax::end();?>
-
       <?php Modal::end(); ?>
 
   <?php endforeach;?>
