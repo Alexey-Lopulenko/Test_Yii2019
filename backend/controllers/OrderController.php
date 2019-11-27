@@ -71,11 +71,13 @@ class OrderController extends Controller
         $model = new Order();
         $users_id = User::find()->all();
         $dates_id = Date::find()->where(['status' => 'active'])->all();
-        $sessions = Session::find()->all();
-        $tickets = Ticket::find()->where(['status' => 'on_sale'])->all();
+//        $sessions = Session::find()->all();
+        $sessions = [];
+//        $tickets = Ticket::find()->where(['status' => 'on_sale'])->all();
+        $tickets = [];
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['order']);//, 'id' => $model->id
+            return $this->redirect(['index']);//, 'id' => $model->id
         }
 
         return $this->render('create', [
@@ -85,6 +87,52 @@ class OrderController extends Controller
             'sessions' => $sessions,
             'tickets' => $tickets,
         ]);
+    }
+
+
+    /**
+     * @param $id
+     * @return string
+     */
+    public function actionLists_session($id)
+    {
+
+        $countSession = Session::find()
+            ->where(['date_id' => $id])
+            ->count();
+        $sessions = Session::find()
+            ->where(['date_id' => $id])
+            ->all();
+        if ($countSession > 0) {
+            foreach ($sessions as $session) {
+                echo "<option value='" . $session->id . "'>" . $session->time . "</option>";
+            }
+        } else {
+            echo "<option>---</option>";
+        }
+
+    }
+
+
+    /**
+     * @param $id
+     * @return string
+     */
+    public function actionLists_ticket($id)
+    {
+        $countTicket = Ticket::find()
+            ->where(['session_id' => $id])
+            ->count();
+        $tickets = Ticket::find()
+            ->where(['session_id' => $id])
+            ->all();
+        if ($countTicket > 0) {
+            foreach ($tickets as $ticket) {
+                echo "<option value='" . $ticket->id . "'>" . $ticket->place_id . "</option>";
+            }
+        } else {
+            echo "<option>---</option>";
+        }
     }
 
     /**
@@ -98,12 +146,21 @@ class OrderController extends Controller
     {
         $model = $this->findModel($id);
 
+        $users_id = User::find()->all();
+        $dates_id = Date::find()->where(['status' => 'active'])->all();
+        $sessions = Session::find()->where(['date_id' => $model->date_id])->all();
+        $tickets = Ticket::find()->where(['status' => 'on_sale'])->all();
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'users_id' => $users_id,
+            'dates_id' => $dates_id,
+            'sessions' => $sessions,
+            'tickets' => $tickets,
         ]);
     }
 

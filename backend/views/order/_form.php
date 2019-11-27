@@ -3,7 +3,8 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
-use yii\widgets\Pjax;
+
+//use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Order */
@@ -19,30 +20,38 @@ use yii\widgets\Pjax;
     <?php
     $user_id = ArrayHelper::map($users_id, 'id', 'username');
     $params_user_id = [
-        'prompt' => 'Username'
+        'prompt' => 'Username',
     ];
 
     $date_id = ArrayHelper::map($dates_id, 'id', 'date_session');
     $params_date_id = [
-        'prompt' => 'Date session'
+        'prompt' => 'Date session',
+        'onchange' => '
+                $.post("index.php?r=order/lists_session&id=' . '"+$(this).val(), function(data){
+                    $("select#order-session_id").html(data);
+                });',
     ];
 
     $session_id = ArrayHelper::map($sessions, 'id', 'time');
     $params_session_id = [
-        'prompt' => 'Time session'
+        'prompt' => '',
+        'onchange' => '
+                $.post("index.php?r=order/lists_ticket&id=' . '"+$(this).val(), function(data){
+                    $("select#order-ticket_id").html(data);
+                });',
     ];
 
     $ticket_id = ArrayHelper::map($tickets, 'id', 'id');
     $params_ticket_id = [
-        'prompt' => 'Ticket id',
-//        'multiple' => true,
+        'prompt' => '',
+
     ];
     ?>
-    <?php Pjax::begin(); ?>
+
+
     <?php $form = ActiveForm::begin([
         'id' => 'get_order'
     ]); ?>
-
 
     <?= $form->field($model, 'user_id')->dropDownList($user_id, $params_user_id) ?>
 
@@ -60,29 +69,11 @@ use yii\widgets\Pjax;
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
 
+    <div class="col-md-4">
+        <?= $form->field($model, 'ticket_id')->label('Альбомы')->checkboxList(
+            \app\models\Ticket::find()->indexBy('place_id')->column()
+        ) ?>
+    </div>
     <?php ActiveForm::end(); ?>
-    <?php Pjax::end(); ?>
-
-
-    <?php
-    $js = <<<JS
-     $('#get_order').on('click', function() {
-       $.ajax({
-       url:'index.php?r=order/create',
-       data:{test: '123'},
-       type: 'POST',
-           success: function(res) {
-             console.log(res);
-       },
-           error: function() {
-             alert('Error!');
-          }
-       })
-     });
-JS;
-    $this->registerJs($js);
-    ?>
-
-
 
 </div>

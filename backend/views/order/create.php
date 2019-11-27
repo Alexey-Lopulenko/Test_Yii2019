@@ -28,14 +28,4 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 
-    <?php
-
-    $request = Yii::$app->request;
-    if ($request->isAjax) {
-        echo 'Good!';
-    } else {
-        echo 'no';
-    }
-
-    ?>
 </div>
