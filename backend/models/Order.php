@@ -54,6 +54,7 @@ class Order extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
+            'film' => 'Film',
             'date_id' => 'Date ID',
             'session_id' => 'Session ID',
             'ticket_id' => 'Ticket ID',
@@ -68,6 +69,15 @@ class Order extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFilm()
+    {
+        return $this->hasOne(Film::className(), ['id' => 'film_id']);
     }
 
     /**

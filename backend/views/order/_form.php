@@ -3,8 +3,11 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
-//use yii\widgets\Pjax;
+use kartik\depdrop\DepDrop;
+
+
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Order */
@@ -13,6 +16,7 @@ use yii\helpers\ArrayHelper;
 /** @var \app\models\Date $dates_id */
 /** @var \app\models\Session $sessions */
 /** @var \app\models\Ticket $tickets */
+/** @var \app\models\Film $films */
 ?>
 
 <div class="order-form">
@@ -21,6 +25,16 @@ use yii\helpers\ArrayHelper;
     $user_id = ArrayHelper::map($users_id, 'id', 'username');
     $params_user_id = [
         'prompt' => 'Username',
+    ];
+
+
+    $film_id = ArrayHelper::map($films, 'id', 'title');
+    $params_film_id = [
+        'prompt' => 'Film',
+        'onchange' => '
+                $.post("index.php?r=order/lists_date&id=' . '"+$(this).val(), function(data){
+                    $("select#order-date_id").html(data);
+                });',
     ];
 
     $date_id = ArrayHelper::map($dates_id, 'id', 'date_session');
@@ -34,7 +48,7 @@ use yii\helpers\ArrayHelper;
 
     $session_id = ArrayHelper::map($sessions, 'id', 'time');
     $params_session_id = [
-        'prompt' => '',
+        'prompt' => 'Session',
         'onchange' => '
                 $.post("index.php?r=order/lists_ticket&id=' . '"+$(this).val(), function(data){
                     $("select#order-ticket_id").html(data);
@@ -43,7 +57,7 @@ use yii\helpers\ArrayHelper;
 
     $ticket_id = ArrayHelper::map($tickets, 'id', 'id');
     $params_ticket_id = [
-        'prompt' => '',
+        'prompt' => 'Ticket',
 
     ];
     ?>
@@ -54,6 +68,8 @@ use yii\helpers\ArrayHelper;
     ]); ?>
 
     <?= $form->field($model, 'user_id')->dropDownList($user_id, $params_user_id) ?>
+
+    <?= $form->field($model, 'film')->dropDownList($film_id, $params_film_id) ?>
 
     <?= $form->field($model, 'date_id')->dropDownList($date_id, $params_date_id) ?>
 
@@ -69,10 +85,34 @@ use yii\helpers\ArrayHelper;
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
 
-    <div class="col-md-4">
-        <?= $form->field($model, 'ticket_id')->label('Альбомы')->checkboxList(
-            \app\models\Ticket::find()->indexBy('place_id')->column()
-        ) ?>
+    <div class="col-md-8">
+
+
+        <!--        --><?php //$model->film_id = \app\models\Date::find()->where(['id'=>$model->film_id])->one()->film_id; ?>
+
+        <?= $form->field($model, 'film')->dropDownList($film_id, $params_film_id) ?>
+        <?=
+        $form->field($model, 'date')->widget(DepDrop::classname(), [
+            'options' => ['id' => 'date_session'],
+            'pluginOptions' => [
+                'depends' => ['id'],
+                'placeholder' => 'Select...',
+                'url' => Url::to(['/order/date'])
+            ]
+        ]);
+        ?>
+
+        <?=
+        $form->field($model, 'session')->widget(DepDrop::classname(), [
+            'pluginOptions' => [
+                'depends' => ['id', 'time'],
+                'placeholder' => 'Select...',
+                'url' => Url::to(['/order/session'])
+            ]
+        ]);
+        ?>
+
+
     </div>
     <?php ActiveForm::end(); ?>
 

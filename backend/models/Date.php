@@ -21,6 +21,9 @@ class Date extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+
+//    public $test_film_id;
+
     public static function tableName()
     {
         return 'date';
@@ -75,5 +78,14 @@ class Date extends \yii\db\ActiveRecord
     public function getSessions()
     {
         return $this->hasMany(Session::className(), ['date_id' => 'id']);
+    }
+
+    /**
+     * @param $film_id
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function getDate($film_id)
+    {
+        return self::find()->where(['film_id' => $film_id])->all();
     }
 }

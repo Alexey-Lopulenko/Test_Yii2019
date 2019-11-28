@@ -99,4 +99,11 @@ class Session extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Ticket::className(), ['session_id' => 'id']);
     }
+
+    public static function getSessionList($date_id)
+    {
+        return self::find()->where(['date_id' => $date_id])->all();
+    }
+
+
 }
