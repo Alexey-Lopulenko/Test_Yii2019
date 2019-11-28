@@ -3,10 +3,9 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
+use yii\widgets\Pjax;
 
-use kartik\depdrop\DepDrop;
-
+$sessionActive = Yii::$app->session;
 
 
 /* @var $this yii\web\View */
@@ -20,7 +19,7 @@ use kartik\depdrop\DepDrop;
 ?>
 
 <div class="order-form">
-
+    <?php Pjax::begin(); ?>
     <?php
     $user_id = ArrayHelper::map($users_id, 'id', 'username');
     $params_user_id = [
@@ -58,7 +57,6 @@ use kartik\depdrop\DepDrop;
     $ticket_id = ArrayHelper::map($tickets, 'id', 'id');
     $params_ticket_id = [
         'prompt' => 'Ticket',
-
     ];
     ?>
 
@@ -88,32 +86,30 @@ use kartik\depdrop\DepDrop;
     <div class="col-md-8">
 
 
-        <!--        --><?php //$model->film_id = \app\models\Date::find()->where(['id'=>$model->film_id])->one()->film_id; ?>
-
-        <?= $form->field($model, 'film')->dropDownList($film_id, $params_film_id) ?>
-        <?=
-        $form->field($model, 'date')->widget(DepDrop::classname(), [
-            'options' => ['id' => 'date_session'],
-            'pluginOptions' => [
-                'depends' => ['id'],
-                'placeholder' => 'Select...',
-                'url' => Url::to(['/order/date'])
-            ]
-        ]);
-        ?>
-
-        <?=
-        $form->field($model, 'session')->widget(DepDrop::classname(), [
-            'pluginOptions' => [
-                'depends' => ['id', 'time'],
-                'placeholder' => 'Select...',
-                'url' => Url::to(['/order/session'])
-            ]
-        ]);
-        ?>
-
-
     </div>
     <?php ActiveForm::end(); ?>
 
+
+
+    <?= Html::a('Cancel', ['/order/create'], [
+        'class' => 'btn btn-md btn-warning',
+        'data' => [
+            'method' => 'post',
+            'params' => [
+                'cancel_id' => 'cancel',
+            ],]
+    ]);
+    if (Yii::$app->request->post('cancel_id')) {
+        echo 'good';
+    }
+    ?>
+    <!--<div id="order-ticket_id">-->
+    <!--    <pre>-->
+    <!--    --><?php
+    //        print_r( $sessionActive['test_place']);
+    //    ?>
+    <!--    </pre>-->
+    <!--</div>-->
+
+    <?php Pjax::end(); ?>
 </div>

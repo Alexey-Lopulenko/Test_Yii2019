@@ -75,7 +75,8 @@ class OrderController extends Controller
         $sessions = [];
         $tickets = [];
         $films = Film::find()->all();
-//        $test_session = Session::find()->with('film')->where([])->all();
+
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);//, 'id' => $model->id
         }
@@ -104,14 +105,12 @@ class OrderController extends Controller
         $dates = Date::find()
             ->where(['film_id' => $id])
             ->all();
+        echo "<option>Select date</option>";
         if ($countDates > 0) {
             foreach ($dates as $date) {
                 echo "<option value='" . $date->id . "'>" . $date->date_session . "</option>";
             }
-        } else {
-            echo "<option>---</option>";
         }
-
     }
 
 
@@ -129,11 +128,11 @@ class OrderController extends Controller
             ->where(['date_id' => $id])
             ->all();
 
-        echo "<option> test111</option>";
+        echo "<option>Select session</option>";
         if ($countSession > 0) {
 
             foreach ($sessions as $session) {
-                echo "<option value='" . $session->id . "'>" . $session->time . "</option>";
+                echo "<option value='" . $session->id . "' id='" . $session->id . "'>" . $session->time . "</option>";
             }
         }
 
@@ -146,6 +145,7 @@ class OrderController extends Controller
      */
     public function actionLists_ticket($id)
     {
+        $sessionActive = Yii::$app->session;
         $countTicket = Ticket::find()
             ->where(['session_id' => $id])
             ->count();
@@ -155,11 +155,22 @@ class OrderController extends Controller
         if ($countTicket > 0) {
             foreach ($tickets as $ticket) {
                 echo "<option value='" . $ticket->id . "'>" . $ticket->place_id . "</option>";
+                $sessionActive['test_place'] .= $ticket->place_id;
             }
         } else {
             echo "<option>---</option>";
         }
     }
+
+
+//    public function actionPlaceByOrder($id_place){
+//        $arrPlace[$id_place] = $id_place;
+//
+//        echo "<pre>";
+//            print_r($arrPlace);
+//        echo "</pre>";
+//    }
+
 
     /**
      * Updates an existing Order model.
@@ -220,51 +231,51 @@ class OrderController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    public function actionDate()
-    {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $out = [];
-        if (isset($_POST['depdrop_parents'])) {
-            $parents = $_POST['depdrop_parents'];
-            if ($parents != null) {
-                $film_id = $parents[0];
-                $out = self::getDate($film_id);
-
-                return ['output' => $out, 'selected' => ''];
-            }
-        }
-        return ['output' => '', 'selected' => ''];
-    }
-
-
-    /**
-     * @return array
-     * *the getSessionList function will query the database based on the
-     * cat_id and sub_cat_id and return an array like below:
-     *  [
-     *      'out'=>[
-     *          ['id'=>'<prod-id-1>', 'name'=>'<prod-name1>'],
-     *          ['id'=>'<prod_id_2>', 'name'=>'<prod-name2>']
-     *       ],
-     *       'selected'=>'<prod-id-1>'
-     *  ]
-     */
-    public function actionSession()
-    {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $out = [];
-        if (isset($_POST['depdrop_parents'])) {
-            $ids = $_POST['depdrop_parents'];
-            $date_id = empty($ids[0]) ? null : $ids[0];
-            $session_id = empty($ids[1]) ? null : $ids[1];
-            if ($date_id != null) {
-                $data = Session::getSessionList($date_id, $session_id);
-
-                return ['output' => $data['out'], 'selected' => $data['selected']];
-            }
-        }
-        return ['output' => '', 'selected' => ''];
-    }
+//    public function actionDate()
+//    {
+//        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+//        $out = [];
+//        if (isset($_POST['depdrop_parents'])) {
+//            $parents = $_POST['depdrop_parents'];
+//            if ($parents != null) {
+//                $film_id = $parents[0];
+//                $out = self::getDate($film_id);
+//
+//                return ['output' => $out, 'selected' => ''];
+//            }
+//        }
+//        return ['output' => '', 'selected' => ''];
+//    }
+//
+//
+//    /**
+//     * @return array
+//     * *the getSessionList function will query the database based on the
+//     * cat_id and sub_cat_id and return an array like below:
+//     *  [
+//     *      'out'=>[
+//     *          ['id'=>'<prod-id-1>', 'name'=>'<prod-name1>'],
+//     *          ['id'=>'<prod_id_2>', 'name'=>'<prod-name2>']
+//     *       ],
+//     *       'selected'=>'<prod-id-1>'
+//     *  ]
+//     */
+//    public function actionSession()
+//    {
+//        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+//        $out = [];
+//        if (isset($_POST['depdrop_parents'])) {
+//            $ids = $_POST['depdrop_parents'];
+//            $date_id = empty($ids[0]) ? null : $ids[0];
+//            $session_id = empty($ids[1]) ? null : $ids[1];
+//            if ($date_id != null) {
+//                $data = Session::getSessionList($date_id, $session_id);
+//
+//                return ['output' => $data['out'], 'selected' => $data['selected']];
+//            }
+//        }
+//        return ['output' => '', 'selected' => ''];
+//    }
 
 
 }
