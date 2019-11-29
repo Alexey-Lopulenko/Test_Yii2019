@@ -27,14 +27,22 @@ class TicketController extends Controller
 
         $model = new ByForm();
         $film = Film::find()->all();
-        $date = Date::find()->where(['status'=>'active'])->all();
+        $date = Date::find()->where(['status' => 'active'])->all();
         $session = Session::find()->where(['status_session' => 'active'])->all();
         $ticket = Ticket::find()->all();
         $place = Place::find()->orderBy(['id' => SORT_ASC])->all();
         $row = Row::find()->all();
 
 
-        return $this->render('index', ['model' => $model, 'film' =>$film, 'date'=>$date, 'session'=>$session, 'ticket'=>$ticket, 'place'=>$place, 'row'=>$row]) ;
+        return $this->render('index', [
+            'model' => $model,
+            'film' => $film,
+            'date' => $date,
+            'session' => $session,
+            'ticket' => $ticket,
+            'place' => $place,
+            'row' => $row,
+        ]);
     }
 
     /**
@@ -80,7 +88,12 @@ class TicketController extends Controller
 
             }
         }
-        return $this->render('cabinet', ['dates' => $dates, 'sessions' => $sessions, 'tickets' => $tickets, 'orders' => $orders]);
+        return $this->render('cabinet', [
+            'dates' => $dates,
+            'sessions' => $sessions,
+            'tickets' => $tickets,
+            'orders' => $orders,
+        ]);
     }
 
 }

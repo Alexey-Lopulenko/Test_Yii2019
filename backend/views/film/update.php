@@ -4,6 +4,7 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Film */
+/** @var \app\models\Film $film_id */
 
 $this->title = 'Update Film: ' . $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Films', 'url' => ['index']];
@@ -14,8 +15,10 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= $this->render('_form', [
+    <?=
+    $this->render('_form', [
         'model' => $model,
+        'film_id' => $film_id,
     ]) ?>
 
 </div>

@@ -3,7 +3,9 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
-use yii\widgets\Pjax;
+
+//use yii\widgets\Pjax;
+
 
 $sessionActive = Yii::$app->session;
 
@@ -19,7 +21,6 @@ $sessionActive = Yii::$app->session;
 ?>
 
 <div class="order-form">
-    <?php Pjax::begin(); ?>
     <?php
     $user_id = ArrayHelper::map($users_id, 'id', 'username');
     $params_user_id = [
@@ -50,7 +51,7 @@ $sessionActive = Yii::$app->session;
         'prompt' => 'Session',
         'onchange' => '
                 $.post("index.php?r=order/lists_ticket&id=' . '"+$(this).val(), function(data){
-                    $("select#order-ticket_id").html(data);
+                    $("div#order-ticket_id").html(data);
                 });',
     ];
 
@@ -79,37 +80,51 @@ $sessionActive = Yii::$app->session;
 
     <?= $form->field($model, 'updated_at')->textInput() ?>
 
+    <?= Html::textInput('bufTicket', '', ['id' => 'bufTicket', 'class' => 'form-control']) ?>
+
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>
 
-    <div class="col-md-8">
 
-
-    </div>
     <?php ActiveForm::end(); ?>
 
-
-
-    <?= Html::a('Cancel', ['/order/create'], [
-        'class' => 'btn btn-md btn-warning',
-        'data' => [
-            'method' => 'post',
-            'params' => [
-                'cancel_id' => 'cancel',
-            ],]
-    ]);
-    if (Yii::$app->request->post('cancel_id')) {
-        echo 'good';
-    }
-    ?>
-    <!--<div id="order-ticket_id">-->
-    <!--    <pre>-->
+    <?php //Pjax::begin();?>
+    <div id="order-ticket_id" class="col-md-12" name="Order[ticket_id]">
+    </div>
     <!--    --><?php
-    //        print_r( $sessionActive['test_place']);
+    ////    $js = <<<JS
+    ////  $.post("index.php?r=order/lists_ticket&id=' . '"+$(this).val(), function(data){
+    ////                    $("div#order-ticket_id").html(data);
+    //// });
+    ////JS;
+    ////    $this->registerJs($js);
     //    ?>
-    <!--    </pre>-->
-    <!--</div>-->
+    <?php //Pjax::end();?>
 
-    <?php Pjax::end(); ?>
 </div>
+
+<?php
+$js = <<<JS
+$('.js-ticket-btn').click(function(){
+  alert('Вы нажали на элемент "foo"');
+});
+
+var ArrTicket ='';
+$('body').on('click', '.js-ticket-btn', function(e){
+    var  dataTicket  = $(this).attr('data-ticket_id');
+    var  dataSession  = $(this).attr('data-session_id');
+    console.log(dataTicket , dataSession);
+    
+    ArrTicket += ','+dataTicket;
+    $("input#bufTicket").val(ArrTicket);
+    console.log(ArrTicket);
+});
+
+    
+
+
+JS;
+
+
+$this->registerJs($js) ?>

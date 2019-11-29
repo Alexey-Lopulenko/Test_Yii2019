@@ -8,6 +8,7 @@ use yii\helpers\Html;
 /** @var \app\models\Date $dates_id */
 /** @var \app\models\Session $sessions */
 /** @var \app\models\Ticket $tickets */
+/** @var \app\models\Film $films */
 
 $this->title = 'Update Order: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Orders', 'url' => ['index']];
@@ -24,6 +25,7 @@ $this->params['breadcrumbs'][] = 'Update';
         'dates_id' => $dates_id,
         'sessions' => $sessions,
         'tickets' => $tickets,
+        'films' => $films,
     ]) ?>
 
 </div>

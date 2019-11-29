@@ -4,6 +4,8 @@ namespace backend\controllers;
 
 use app\models\Date;
 use app\models\Film;
+use app\models\Place;
+use app\models\Row;
 use app\models\Session;
 use app\models\Ticket;
 use app\models\User;
@@ -77,9 +79,54 @@ class OrderController extends Controller
         $films = Film::find()->all();
 
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);//, 'id' => $model->id
+        echo "<pre>";
+        if (Yii::$app->request->post()) {
+            $ticketsId = explode(',', Yii::$app->request->post('bufTicket'));
+
+            print_r(Yii::$app->request->post());
+
+            $postOrder = Yii::$app->request->post('Order');
+
+
+            foreach ($ticketsId as $ticketId) {
+                if ($ticketId != '') {
+                    $ticketInDb = Ticket::findOne($ticketId);
+                    if ($ticketInDb->status == 'on_sale') {
+
+                        $order = new Order();
+                        $order->ticket_id = (int)$ticketId;
+
+                        $order->user_id = (int)$postOrder['user_id'];
+                        $order->date_id = (int)$postOrder['date_id'];
+                        $order->session_id = (int)$postOrder['session_id'];
+                        $order->created_at = 2019;
+                        $order->updated_at = 2019;
+
+
+                        if ($order->save()) {
+                            $ticketInDb->status = 'sold_out';
+                            $ticketInDb->save();
+                        } else {
+                            echo 'failed';
+                            print_r($order->attributes);
+                            print_r($order->errors);
+
+                        }
+                    }
+                }
+            }
+            echo "</pre>";
+
         }
+
+
+//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            echo "<pre>";
+//                    print_r(Yii::$app->request->post());
+//            echo "</pre>";
+//            die;
+//            return $this->redirect(['index']);//, 'id' => $model->id
+//        }
 
         return $this->render('create', [
             'model' => $model,
@@ -145,7 +192,9 @@ class OrderController extends Controller
      */
     public function actionLists_ticket($id)
     {
-        $sessionActive = Yii::$app->session;
+        $rows = Row::find()->all();
+        $places = Place::find()->all();
+
         $countTicket = Ticket::find()
             ->where(['session_id' => $id])
             ->count();
@@ -153,23 +202,22 @@ class OrderController extends Controller
             ->where(['session_id' => $id])
             ->all();
         if ($countTicket > 0) {
-            foreach ($tickets as $ticket) {
-                echo "<option value='" . $ticket->id . "'>" . $ticket->place_id . "</option>";
-                $sessionActive['test_place'] .= $ticket->place_id;
-            }
-        } else {
-            echo "<option>---</option>";
+            return $this->renderAjax('_place', $params = [
+                'tickets' => $tickets,
+                'rows' => $rows,
+                'places' => $places,
+                'id' => $id,
+            ]);
         }
     }
 
 
-//    public function actionPlaceByOrder($id_place){
-//        $arrPlace[$id_place] = $id_place;
-//
-//        echo "<pre>";
-//            print_r($arrPlace);
-//        echo "</pre>";
-//    }
+    public function actionSave_ticket($ticket_id, $session_id)
+    {
+
+//       $this->redirect('index.php?r=order/create');
+        return $this->actionLists_ticket($session_id);
+    }
 
 
     /**
@@ -183,6 +231,7 @@ class OrderController extends Controller
     {
         $model = $this->findModel($id);
 
+        $films = Film::find()->all();
         $users_id = User::find()->all();
         $dates_id = Date::find()->where(['status' => 'active'])->all();
         $sessions = Session::find()->where(['date_id' => $model->date_id])->all();
@@ -198,6 +247,7 @@ class OrderController extends Controller
             'dates_id' => $dates_id,
             'sessions' => $sessions,
             'tickets' => $tickets,
+            'films' => $films,
         ]);
     }
 
