@@ -79,17 +79,13 @@ class OrderController extends Controller
         $films = Film::find()->all();
 
 
-        echo "<pre>";
         if (Yii::$app->request->post()) {
             $ticketsId = explode(',', Yii::$app->request->post('bufTicket'));
-
-            print_r(Yii::$app->request->post());
 
             $postOrder = Yii::$app->request->post('Order');
 
 
             foreach ($ticketsId as $ticketId) {
-                if ($ticketId != '') {
                     $ticketInDb = Ticket::findOne($ticketId);
                     if ($ticketInDb->status == 'on_sale') {
 
@@ -99,23 +95,22 @@ class OrderController extends Controller
                         $order->user_id = (int)$postOrder['user_id'];
                         $order->date_id = (int)$postOrder['date_id'];
                         $order->session_id = (int)$postOrder['session_id'];
-                        $order->created_at = 2019;
-                        $order->updated_at = 2019;
 
 
                         if ($order->save()) {
                             $ticketInDb->status = 'sold_out';
                             $ticketInDb->save();
+                            return $this->redirect(['index']);//, 'id' => $model->id
                         } else {
                             echo 'failed';
                             print_r($order->attributes);
                             print_r($order->errors);
 
                         }
+                    } else {
+                        Yii::$app->session->setFlash('error', 'Билет был продан ранее!');
                     }
-                }
             }
-            echo "</pre>";
 
         }
 

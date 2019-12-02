@@ -76,11 +76,8 @@ $sessionActive = Yii::$app->session;
 
     <?= $form->field($model, 'ticket_id')->dropDownList($ticket_id, $params_ticket_id) ?>
 
-    <?= $form->field($model, 'created_at')->textInput() ?>
 
-    <?= $form->field($model, 'updated_at')->textInput() ?>
-
-    <?= Html::textInput('bufTicket', '', ['id' => 'bufTicket', 'class' => 'form-control']) ?>
+    <?= Html::textInput('bufTicket', '', ['id' => 'bufTicket', 'class' => 'form-control', 'type' => 'hidden']) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
@@ -106,24 +103,35 @@ $sessionActive = Yii::$app->session;
 
 <?php
 $js = <<<JS
-$('.js-ticket-btn').click(function(){
-  alert('Вы нажали на элемент "foo"');
-});
 
-var ArrTicket ='';
+var ArrTicket =[];
+
 $('body').on('click', '.js-ticket-btn', function(e){
     var  dataTicket  = $(this).attr('data-ticket_id');
-    var  dataSession  = $(this).attr('data-session_id');
-    console.log(dataTicket , dataSession);
-    
-    ArrTicket += ','+dataTicket;
-    $("input#bufTicket").val(ArrTicket);
+           
+         if($(this).hasClass('disabled')){
+    alert('Билет на данное место продан');
+    }else{
+      
+    $(this).toggleClass('btn-danger');
+
+         if(ArrTicket.length !== 0){
+             //if element in array, delete this element
+            if($.inArray(dataTicket, ArrTicket) !== -1 ){
+                ArrTicket = jQuery.grep(ArrTicket, function(value) {
+                  return value !== dataTicket;
+                })
+            }else {
+                ArrTicket.push(dataTicket);
+            }
+         }else {
+              ArrTicket.push(dataTicket);//first push in array
+         }
+    }
+         var strTicket = ArrTicket.join(',');
+    $("input#bufTicket").val(strTicket);
     console.log(ArrTicket);
 });
-
-    
-
-
 JS;
 
 

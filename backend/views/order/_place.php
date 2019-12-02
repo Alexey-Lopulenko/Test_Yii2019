@@ -2,7 +2,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\Pjax;
+
 
 
 /* @var $this yii\web\View */
@@ -15,7 +15,7 @@ use yii\widgets\Pjax;
 $session_id_by_order = $id;
 ?>
 
-<?php //Pjax::begin();?>
+
 
 <?php foreach ($rows as $row): ?>
     <div class="content text-center" style="margin-top: 12px">
@@ -33,8 +33,7 @@ $session_id_by_order = $id;
                             $status_place = 0;
                         }
                         //вывод ячейки места
-//                    echo  Html::a($place->number_place, ['order/save_ticket', 'ticket_id'=>$ticket->id, 'session_id'=> $session_id_by_order], ['class'=> $class_btn,]);
-                        echo Html::button($place->number_place, ['class' => $class_btn . ' js-ticket-btn', 'data-ticket_id' => $ticket->id, 'data-session_id' => $session_id_by_order]);
+                        echo Html::button($place->number_place, ['class' => $class_btn . ' js-ticket-btn', 'data-ticket_id' => $ticket->id]);
                     }
                 }
             }
@@ -42,7 +41,7 @@ $session_id_by_order = $id;
         <?php endforeach; ?>
     </div>
 <?php endforeach; ?>
-<?php //Pjax::end(); ?>
+
 
 
 
