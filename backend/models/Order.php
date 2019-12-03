@@ -39,7 +39,8 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'date_id', 'session_id', 'ticket_id', 'created_at', 'updated_at'], 'integer'],
+            [['user_id', 'date_id', 'session_id', 'ticket_id', 'created_at', 'updated_at'], 'integer',],
+            [['user_id', 'date_id', 'session_id', 'ticket_id',], 'required',],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['date_id'], 'exist', 'skipOnError' => true, 'targetClass' => Date::className(), 'targetAttribute' => ['date_id' => 'id']],
             [['session_id'], 'exist', 'skipOnError' => true, 'targetClass' => Session::className(), 'targetAttribute' => ['session_id' => 'id']],

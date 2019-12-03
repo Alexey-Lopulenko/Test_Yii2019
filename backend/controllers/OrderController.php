@@ -80,12 +80,14 @@ class OrderController extends Controller
 
 
         if (Yii::$app->request->post()) {
-            $ticketsId = explode(',', Yii::$app->request->post('bufTicket'));
 
+            $ticketsId = explode(',', Yii::$app->request->post('bufTicket'));
             $postOrder = Yii::$app->request->post('Order');
 
+            $oo = count($ticketsId);
 
-            foreach ($ticketsId as $ticketId) {
+            if (count($ticketsId) > 1) {
+                foreach ($ticketsId as $ticketId) {
                     $ticketInDb = Ticket::findOne($ticketId);
                     if ($ticketInDb->status == 'on_sale') {
 
@@ -100,7 +102,6 @@ class OrderController extends Controller
                         if ($order->save()) {
                             $ticketInDb->status = 'sold_out';
                             $ticketInDb->save();
-                            return $this->redirect(['index']);//, 'id' => $model->id
                         } else {
                             echo 'failed';
                             print_r($order->attributes);
@@ -110,8 +111,13 @@ class OrderController extends Controller
                     } else {
                         Yii::$app->session->setFlash('error', 'Билет был продан ранее!');
                     }
+                }
+            } else {
+                Yii::$app->session->setFlash('error', 'Не выбран билет!');
             }
 
+//            return $this->redirect(['index']);//, 'id' => $model->id
+//        }
         }
 
 

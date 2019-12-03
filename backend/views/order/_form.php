@@ -55,10 +55,7 @@ $sessionActive = Yii::$app->session;
                 });',
     ];
 
-    $ticket_id = ArrayHelper::map($tickets, 'id', 'id');
-    $params_ticket_id = [
-        'prompt' => 'Ticket',
-    ];
+
     ?>
 
 
@@ -74,7 +71,6 @@ $sessionActive = Yii::$app->session;
 
     <?= $form->field($model, 'session_id')->dropDownList($session_id, $params_session_id) ?>
 
-    <?= $form->field($model, 'ticket_id')->dropDownList($ticket_id, $params_ticket_id) ?>
 
 
     <?= Html::textInput('bufTicket', '', ['id' => 'bufTicket', 'class' => 'form-control', 'type' => 'hidden']) ?>
@@ -86,18 +82,9 @@ $sessionActive = Yii::$app->session;
 
     <?php ActiveForm::end(); ?>
 
-    <?php //Pjax::begin();?>
     <div id="order-ticket_id" class="col-md-12" name="Order[ticket_id]">
     </div>
-    <!--    --><?php
-    ////    $js = <<<JS
-    ////  $.post("index.php?r=order/lists_ticket&id=' . '"+$(this).val(), function(data){
-    ////                    $("div#order-ticket_id").html(data);
-    //// });
-    ////JS;
-    ////    $this->registerJs($js);
-    //    ?>
-    <?php //Pjax::end();?>
+
 
 </div>
 
