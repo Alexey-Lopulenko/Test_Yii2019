@@ -28,8 +28,9 @@ class ApiController extends ActiveController
                 'class' => \yii\filters\ContentNegotiator::class,
                 'formatParam' => '_format',
                 'formats' => [
-                    'application/xml' => \yii\web\Response::FORMAT_XML,
                     'application/json' => \yii\web\Response::FORMAT_JSON,
+                    'xml' => \yii\web\Response::FORMAT_XML,
+
                 ]
             ]
         ];

@@ -23,9 +23,16 @@ return [
             ]
         ],
 
+//        'user' => [
+//            'identityClass' => 'common\models\User',
+//            'enableAutoLogin' => false,
+//            'enableSession' => false,
+//        ],
         'user' => [
             'identityClass' => 'common\models\User',
-            'enableAutoLogin' => false,
+            'enableAutoLogin' => true,
+//            'enableSession' => false,
+//            'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -40,17 +47,21 @@ return [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => true,
             'showScriptName' => false,
+
             'rules' => [
+                [
+                    'class' => '\yii\rest\UrlRule',
+                    'controller' => ['v1/user', 'v1/order'],
+                    'pluralize' => false,
+//                    'controller' => ['v1/u'=>'v1/user', 'v1/o' => 'v1/order'],
+//                    'extraPatterns' => [
+//                        'GET (request)' => 'action',
+//                        'POST (request)' => 'action',
+//                    ]
 
-
-                '<module:(v1)>/<controller>/<action>/<id:\d+>' => '<module>/<controller>/<action>',
-                '<module:(v1)>/<controller>/<action>' => '<module>/<controller>/<action>',
-
-
-//                    'class' => 'yii\rest\UrlRule',
-//                    'controller' => 'user',
-//                    'pluralise' => false,
-
+                ],
+//                '<module:(v1)>/<controller>/<action>/<id:\d+>' => '<module>/<controller>/<action>',
+//                '<module:(v1)>/<controller>/<action>' => '<module>/<controller>/<action>',
 
             ],
         ]

@@ -13,7 +13,9 @@ return [
     'controllerNamespace' => 'console\controllers',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
+//        '@api' => dirname(dirname(__DIR__)) . '/api',
+
     ],
     'controllerMap' => [
         'fixture' => [
