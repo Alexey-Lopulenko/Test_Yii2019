@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use app\models\Ticket;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -20,6 +21,21 @@ class TicketController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['update', 'delete', 'create'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                    [
+                        'actions' => ['index', 'view'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -123,5 +139,51 @@ class TicketController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    public function actionRole()
+    {
+
+        /**
+         * создание ролей
+         */
+        /*        $admin = Yii::$app->authManager->createRole('admin');
+                $admin->description = 'Полубог(имеет власть над простыми смертными, но уязвим перед "разработчиками")';
+                Yii::$app->authManager->add($admin);
+
+                $content = Yii::$app->authManager->createRole('content');
+                $content->description = 'Летописец';
+                Yii::$app->authManager->add($content);
+
+                $user = Yii::$app->authManager->createRole('user');
+                $user->description = 'Простой смертный';
+                Yii::$app->authManager->add($user);
+
+                $ban = Yii::$app->authManager->createRole('banned');
+                $ban->description = 'Узник Азкабана (за грехи лютые)';
+                Yii::$app->authManager->add($ban);*/
+
+        /**
+         * создание прав для ролей
+         */
+        /* $permit = Yii::$app->authManager->createPermission('canAdmin');
+         $permit->description = 'Право на вход в админку';
+         Yii::$app->authManager->add($permit);*/
+        /**
+         * Наследования ролей и прав
+         */
+        /*$role_a = Yii::$app->authManager->getRole('admin');
+        $role_c = Yii::$app->authManager->getRole('content');
+        $permit = Yii::$app->authManager->getPermission('canAdmin');
+        Yii::$app->authManager->addChild($role_a, $permit);
+        Yii::$app->authManager->addChild($role_c, $permit);*/
+
+        /**
+         * Привязка ролей к пользователю
+         */
+        /* $userRole = Yii::$app->authManager->getRole('admin');
+         Yii::$app->authManager->assign($userRole, Yii::$app->user->getId()); Yii::$app->user->getId()-id нужного пользователя*/
+
+        return 1234567890;
     }
 }

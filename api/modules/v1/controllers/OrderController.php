@@ -3,9 +3,10 @@
 
 namespace api\modules\v1\controllers;
 
-
+use Yii;
 use api\modules\v1\components\ApiController;
-use common\models\User;
+use api\modules\v1\models\User;
+use yii\base\ErrorException;
 use yii\filters\auth\HttpBasicAuth;
 
 class OrderController extends ApiController
@@ -33,10 +34,23 @@ class OrderController extends ApiController
      */
     public function actionTest()
     {
-        $users = User::find()->all();
-        return [
-            'result' => $users,
-        ];
+//        $users = User::find()->all();
+//        return [
+//            'result' => $users,
+//        ];
+        return Yii::$app->user->isGuest;
+
+    }
+
+
+    public function actionLogin()
+    {
+        if ($user = User::findByUsername(\Yii::$app->request->get('username')) and
+            $user->validatePassword(\Yii::$app->request->get('password'))) {
+            return $user->auth_key;
+        } else {
+            throw new ErrorException("Данного пользователя не существует");
+        }
     }
 
 }

@@ -23,16 +23,10 @@ return [
             ]
         ],
 
-//        'user' => [
-//            'identityClass' => 'common\models\User',
-//            'enableAutoLogin' => false,
-//            'enableSession' => false,
-//        ],
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
-//            'enableSession' => false,
-//            'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
+            'enableSession' => false,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -60,8 +54,8 @@ return [
 //                    ]
 
                 ],
-//                '<module:(v1)>/<controller>/<action>/<id:\d+>' => '<module>/<controller>/<action>',
-//                '<module:(v1)>/<controller>/<action>' => '<module>/<controller>/<action>',
+                '<module:(v1)>/<controller>/<action>/<id:\d+>' => '<module>/<controller>/<action>',
+                '<module:(v1)>/<controller>/<action>' => '<module>/<controller>/<action>',
 
             ],
         ]
