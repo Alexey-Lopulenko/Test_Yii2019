@@ -1,4 +1,4 @@
-<h3 class="text-center">place</h3>
+
 <?php
 
 use yii\helpers\Html;
@@ -18,7 +18,7 @@ $session_id_by_order = $id;
 
 
 <?php foreach ($rows as $row): ?>
-    <div class="content text-center" style="margin-top: 12px">
+    <p>
         <?= '<strong>Ряд №' . $row->id . '</strong>' ?>
         <?php foreach ($places as $place): ?>
             <?php foreach ($tickets as $ticket) {
@@ -39,7 +39,7 @@ $session_id_by_order = $id;
             }
             ?>
         <?php endforeach; ?>
-    </div>
+    </p>
 <?php endforeach; ?>
 
 

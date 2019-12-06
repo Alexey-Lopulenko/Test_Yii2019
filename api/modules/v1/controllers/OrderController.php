@@ -8,6 +8,7 @@ use api\modules\v1\components\ApiController;
 use api\modules\v1\models\User;
 use yii\base\ErrorException;
 use yii\filters\auth\HttpBasicAuth;
+use yii\filters\AccessControl;
 
 class OrderController extends ApiController
 {
@@ -25,6 +26,17 @@ class OrderController extends ApiController
         $behaviors['authenticator'] = [
             'class' => HttpBasicAuth::class,
         ];
+        $behaviors['access'] = [
+            'class' => AccessControl::className(),
+            'only' => ['create', 'update', 'delete'],
+            'rules' => [
+                [
+                    'allow' => true,
+                    'actions' => ['create', 'update', 'delete'],
+                    'roles' => ['admin'],
+                ],
+            ],
+        ];
         return $behaviors;
     }
 
@@ -38,8 +50,8 @@ class OrderController extends ApiController
 //        return [
 //            'result' => $users,
 //        ];
-        return Yii::$app->user->isGuest;
 
+        return Yii::$app->user->getId();
     }
 
 

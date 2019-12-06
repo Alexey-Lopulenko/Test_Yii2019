@@ -9,6 +9,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * FilmController implements the CRUD actions for Film model.
@@ -83,6 +84,13 @@ class FilmController extends Controller
         $model = new Film();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+            $model->image = UploadedFile::getInstance($model, 'image');
+            echo '<pre>';
+            print_r($model);
+            die;
+            echo '</pre>';
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

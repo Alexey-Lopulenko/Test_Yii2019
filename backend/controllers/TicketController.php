@@ -54,9 +54,10 @@ class TicketController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => Ticket::find(),
         ]);
-
+//        $searchModel = new Ticket();
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+//            'searchModel' => $searchModel,
         ]);
     }
 

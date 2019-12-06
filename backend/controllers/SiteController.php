@@ -61,7 +61,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+            return $this->render('index');
     }
 
     /**
@@ -71,6 +71,12 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
+//        if (Yii::$app->user->can('admin')) {
+//           exit('привет админ');
+//        } else {
+//            exit ('Ты - не админ!');
+//        }
+
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }

@@ -32,7 +32,14 @@ class OrderController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['update', 'delete', 'create'],
+                        'actions' => [
+                            'update',
+                            'delete',
+                            'create',
+                            'lists_date',
+                            'lists_session',
+                            'lists_ticket'
+                        ],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -61,9 +68,11 @@ class OrderController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => Order::find(),
         ]);
+        $searchModel = new Order();
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
         ]);
     }
 

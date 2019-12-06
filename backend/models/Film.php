@@ -18,6 +18,22 @@ use Yii;
  */
 class Film extends \yii\db\ActiveRecord
 {
+
+    public $image;
+    public $gallery;
+
+    /**
+     * @return array
+     */
+    public function behaviors()
+    {
+        return [
+            'image' => [
+                'class' => 'rico\yii2images\behaviors\ImageBehave',
+            ]
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -34,6 +50,8 @@ class Film extends \yii\db\ActiveRecord
         return [
             [['title', 'logo_img'], 'string', 'max' => 250],
             [['description'], 'string', 'max' => 1000],
+            [['image'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png , jpg'],
+//            [['gallery'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png , jpg', 'maxFiles' => 4],
         ];
     }
 
@@ -46,7 +64,7 @@ class Film extends \yii\db\ActiveRecord
             'id' => 'ID',
             'title' => 'Title',
             'description' => 'Description',
-            'logo_img' => 'Logo Img',
+            'image' => 'Image',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -58,5 +76,17 @@ class Film extends \yii\db\ActiveRecord
     public function getDates()
     {
         return $this->hasMany(Date::className(), ['film_id' => 'id']);
+    }
+
+
+    public function upload()
+    {
+        if ($this->validate()) {
+            $path = 'upload/store/' . $this->image->baseName . '.' . $this->image->extension;
+            $this->image->saveAs($path);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

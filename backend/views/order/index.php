@@ -5,6 +5,7 @@ use yii\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/** @var  $searchModel yii\data\ActiveDataProvider */
 
 $this->title = 'Orders';
 $this->params['breadcrumbs'][] = $this->title;
@@ -18,17 +19,17 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
 
-    <?= GridView::widget([
+    <?=
+    GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'id',
             'user_id',
             'date_id',
             'session_id',
             'ticket_id',
-
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
