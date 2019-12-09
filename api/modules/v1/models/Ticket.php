@@ -3,7 +3,21 @@
 
 namespace api\modules\v1\models;
 
-
+/**
+ * This is the model class for table "ticket".
+ *
+ * @property int $id
+ * @property int $place_id
+ * @property string $status
+ * @property int $order_id
+ * @property int $session_id
+ *
+ * @property Order[] $orders
+ * @property Session $session
+ * @property Order $order
+ * @property Place $place
+ * @property Session $session0
+ */
 class Ticket extends \yii\db\ActiveRecord
 {
     /**

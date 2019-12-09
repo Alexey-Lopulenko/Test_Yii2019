@@ -6,25 +6,32 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
 
-class Order extends ActiveRecord
+/**
+ * This is the model class for table "order".
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property int $date_id
+ * @property int $session_id
+ * @property int $ticket_id
+ * @property int $created_at
+ * @property int $updated_at
+ *
+ * @property User $user
+ * @property Date $date
+ * @property Session $session
+ * @property Ticket $ticket
+ * @property Ticket[] $tickets
+ * @property User $user0
+ */
+class Order extends \yii\db\ActiveRecord
 {
     /**
-     * Define rules for validation
+     * {@inheritdoc}
      */
-    public function fields()
+    public static function tableName()
     {
-        return [
-            'id',
-            'user_id',
-            'date_id',
-            'session_id',
-            'ticket_id',
-        ];
-    }
-
-    public function extractFields()
-    {
-        return [];
+        return 'order';
     }
 
     /**
@@ -125,5 +132,4 @@ class Order extends ActiveRecord
     {
         return $this->hasOne(User::className(), ['order_id' => 'id']);
     }
-
 }

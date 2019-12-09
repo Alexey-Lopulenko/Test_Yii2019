@@ -109,7 +109,6 @@ class OrderController extends Controller
             $ticketsId = explode(',', Yii::$app->request->post('bufTicket'));
             $postOrder = Yii::$app->request->post('Order');
 
-            $oo = count($ticketsId);
 
             if (count($ticketsId) > 1) {
                 foreach ($ticketsId as $ticketId) {

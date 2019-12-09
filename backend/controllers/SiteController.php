@@ -71,11 +71,6 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-//        if (Yii::$app->user->can('admin')) {
-//           exit('привет админ');
-//        } else {
-//            exit ('Ты - не админ!');
-//        }
 
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
@@ -83,14 +78,32 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            if (Yii::$app->user->can('admin')) {
+                return $this->goBack();
+            } else {
+                Yii::$app->user->logout();
+                return $this->redirect(['site/login']);
+            }
         } else {
-            $model->password = '';
-
             return $this->render('login', [
                 'model' => $model,
             ]);
         }
+
+//        if (!Yii::$app->user->isGuest) {
+//            return $this->goHome();
+//        }
+//
+//        $model = new LoginForm();
+//        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+//            return $this->goBack();
+//        } else {
+//            $model->password = '';
+//
+//            return $this->render('login', [
+//                'model' => $model,
+//            ]);
+//        }
     }
 
     /**

@@ -11,10 +11,9 @@ use vova07\imperavi\Widget;
 ?>
 
 <div class="film-form">
-    <?= '<pre>' ?>
-    <?= print_r($model->image) ?>
-
-    <?= '</pre>' ?>
+    <!--    --><? //='<pre>'?>
+    <!--    --><? //=print_r($model) ?>
+    <!--    --><? //='</pre>'?>
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 

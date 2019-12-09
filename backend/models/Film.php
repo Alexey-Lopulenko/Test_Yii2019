@@ -20,7 +20,6 @@ class Film extends \yii\db\ActiveRecord
 {
 
     public $image;
-    public $gallery;
 
     /**
      * @return array
@@ -50,8 +49,7 @@ class Film extends \yii\db\ActiveRecord
         return [
             [['title', 'logo_img'], 'string', 'max' => 250],
             [['description'], 'string', 'max' => 1000],
-            [['image'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png , jpg'],
-//            [['gallery'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png , jpg', 'maxFiles' => 4],
+            [['image'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg'],
         ];
     }
 
@@ -79,11 +77,13 @@ class Film extends \yii\db\ActiveRecord
     }
 
 
+    /**
+     * @return bool
+     */
     public function upload()
     {
         if ($this->validate()) {
-            $path = 'upload/store/' . $this->image->baseName . '.' . $this->image->extension;
-            $this->image->saveAs($path);
+            $this->image->saveAs('uploads/store' . $this->image->baseName . '.' . $this->image->extension);
             return true;
         } else {
             return false;
