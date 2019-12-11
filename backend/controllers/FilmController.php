@@ -26,7 +26,7 @@ class FilmController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['update', 'delete', 'create'],
+                        'actions' => ['update', 'delete', 'create', 'import', 'test'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -44,6 +44,23 @@ class FilmController extends Controller
                 ],
             ],
         ];
+    }
+
+
+    /**
+     * @return array
+     */
+    public function actions()
+    {
+        return [
+            'glide' => 'trntv\glide\actions\GlideAction'
+        ];
+    }
+
+
+    public function actionTest()
+    {
+        return Yii::$app->glide->outputImage('12.jpg', ['w' => 100, 'fit' => 'crop']);
     }
 
     /**
@@ -86,10 +103,7 @@ class FilmController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
 
             $model->image = UploadedFile::getInstance($model, 'image');
-            echo '<pre>';
-            print_r($model);
-            die;
-            echo '</pre>';
+
 
             return $this->redirect(['view', 'id' => $model->id]);
         }
@@ -154,15 +168,45 @@ class FilmController extends Controller
     public function actionUpload()
     {
         $model = new Film();
+        $this->enableCsrfValidation = false;
 
         if (Yii::$app->request->isPost) {
             $model->image = UploadedFile::getInstance($model, 'image');
             if ($model->upload()) {
                 // file is uploaded successfully
-                return;
+                return 'file is uploaded successfully';
             }
         }
 
         return $this->render('upload', ['model' => $model]);
+    }
+
+    public function actionImport()
+    {
+        $inputFile = 'upload/files/film_file.xlsx';
+
+        try {
+            $inputFileType = \PHPExcel_IOFactory::identify($inputFile);
+            $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+            $objPHPExcel = $objReader->load($inputFile);
+        } catch (\Exception $e) {
+            die('Error');
+        }
+        $sheet = $objPHPExcel->getSheet(0);
+        $highestRow = $sheet->getHighestRow();
+        $highestColumn = $sheet->getHighestColumn();
+
+        for ($row = 1; $row <= $highestRow; $row++) {
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE, FALSE);
+
+            $film = new Film();
+            $film_id = $rowData[0][0];
+            $film->title = $rowData[0][1];
+            $film->description = $rowData[0][2];
+            $film->save();
+
+            print_r($film->getErrors());
+        }
+        die('okay');
     }
 }

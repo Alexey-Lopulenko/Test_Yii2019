@@ -22,11 +22,15 @@ class UserController extends ApiController
      * @param null $username
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function actionFilter($username = null)
+    public function actionGetUserByName($username = null)
     {
-        if ($username) {
-            return $users = User::find()->where(['like', 'username', $username])->all();
-        }
+//        return User::find()
+//            ->andFilterWhere(['like', 'username', $username])
+//            ->createCommand()->rawSql;
+
+        return $users = User::find()
+            ->andFilterWhere(['like', 'username', $username])
+            ->all();
     }
 
 }

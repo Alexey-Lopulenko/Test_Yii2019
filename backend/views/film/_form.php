@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 //use yii\web\UploadedFile;
 use vova07\imperavi\Widget;
+use kartik\file\FileInput;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Film */
@@ -11,9 +12,7 @@ use vova07\imperavi\Widget;
 ?>
 
 <div class="film-form">
-    <!--    --><? //='<pre>'?>
-    <!--    --><? //=print_r($model) ?>
-    <!--    --><? //='</pre>'?>
+
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
@@ -37,7 +36,9 @@ use vova07\imperavi\Widget;
         ],
     ]); ?>
 
-    <?= $form->field($model, 'image')->fileInput() ?>
+    <?= $form->field($model, 'image')->widget(FileInput::classname(), [
+        'options' => ['accept' => 'image/*'],
+    ]); ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

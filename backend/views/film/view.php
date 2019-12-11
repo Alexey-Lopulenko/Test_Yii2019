@@ -32,7 +32,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'title',
             'description',
-            'image',
+            'SmallImage:image',
+//            'value' => function () {
+//             return Html::img('/test/backend/web/upload/images/film/prefix'.$this->logo_img, ['width' => '70px']);
+//             },
+//            'logo_img',
             'created_at',
             'updated_at',
         ],

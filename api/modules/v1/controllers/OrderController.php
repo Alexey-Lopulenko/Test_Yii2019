@@ -48,6 +48,11 @@ class OrderController extends ApiController
                     'actions' => ['create', 'update', 'delete', 'buy'],
                     'roles' => ['admin'],
                 ],
+                [
+                    'allow' => true,
+                    'actions' => ['buy'],
+                    'roles' => ['@'],
+                ],
             ],
         ];
         return $behaviors;
@@ -61,21 +66,19 @@ class OrderController extends ApiController
     public function actionUsers($id = null)
     {
         if ($id) {
-            return $users = Order::find()->where(['like', 'user_id', $id])->all();
+            return Order::find()->where(['like', 'user_id', $id])->all();
         }
     }
 
     /**
      * @param array $ticket
+     * @param string $date_id
+     * @param string $session_id
      */
-    public function actionBuy(array $ticket)
+    public function actionBuy(array $ticket, string $date_id, string $session_id)
     {
-        $date_id = $ticket['date_id'];
-        $session_id = $ticket['session_id'];
-
-        unset($ticket['date_id']);
-        unset($ticket['session_id']);
-
+        $status = 'success';
+        $result = [];
 
         $user_id = Yii::$app->user->getId();
 
@@ -91,13 +94,22 @@ class OrderController extends ApiController
                 $order->ticket_id = (int)$value;
                 $ticketInDb->status = 'sold_out';
 
-                $order->save();
-                $ticketInDb->save();
+                if (!$order->save() || !$ticketInDb->save()) {
+                    throw new ErrorException("Не сохранилось!");
+                }
+
+                $result[] = 'Place №' . $value . ' Saved!';
             } else {
-                echo 'Error! Place №' . $value . '  sold_out.       ';
+                $result[] = 'Error! Place №' . $value . '  sold_out.';
+                $status = 'error';
             }
 
         }
+
+        return [
+            'status' => $status,
+            'result' => $result,
+        ];
 
     }
 

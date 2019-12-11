@@ -14,17 +14,22 @@ if(!(isset($sessionActive['place_by_order']))){
 
 
     ?>
+<!--src="/var/www/html/test/backend/web/uploads/images/film/1575985349_JtqJxO.jpg"-->
+<!--src="/test/backend/web/uploads/images/film/prefix1575985349_JtqJxO.jpg"-->
+
+<!--src="/var/www/html/test/backend/web/uploads/images/film/1576079239__mPhlQ.jpg"-->
+<!--src="/test/backend/web/uploads/images/film/1576079239__mPhlQ.jpg"-->
 
 <h1 class="text-center">Film</h1>
 
-  <?php
+<?php
   /** @var \app\models\Film $film */
   foreach ($film as $film):?>
       <div class="col-md-4" data-toggle="modal" data-target="#<?=$film->id?>" >
           <div class="product-item">
               <img style="width: 320px; height: 300px"
                    src="<?php
-                   echo $film->logo_img ? $film->logo_img : "https://i.ytimg.com/vi/Dm9Ekro7ubo/hqdefault.jpg";
+                   echo $film->logo_img ? '/test/backend/web/uploads/images/film/' . $film->logo_img : "https://i.ytimg.com/vi/Dm9Ekro7ubo/hqdefault.jpg";
                    ?>" alt="<?=$film->title ?>">
               <div class="product-list d-inline">
                   <h4><?=$film->title?></h4>
@@ -42,7 +47,7 @@ if(!(isset($sessionActive['place_by_order']))){
 
       <img style="width: 150px; height: 150px"
            src="<?php
-           echo $film->logo_img ? $film->logo_img : "https://i.ytimg.com/vi/Dm9Ekro7ubo/hqdefault.jpg";
+           echo $film->logo_img ? '/test/backend/web/upload/images/film/prefix' . $film->logo_img : "https://i.ytimg.com/vi/Dm9Ekro7ubo/hqdefault.jpg";
            ?>" alt="<?=$film->title ?>">
 
       <p>

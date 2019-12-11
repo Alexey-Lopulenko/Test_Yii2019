@@ -12,18 +12,37 @@ return [
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
     'modules' => [
+        'gridview' => [
+            'class' => '\kartik\grid\Module',
+            // enter optional module parameters below - only if you need to
+            // use your own export download action or custom translation
+            // message source
+            // 'downloadAction' => 'gridview/export/download',
+            // 'i18n' => []
+        ],
+
         'yii2images' => [
             'class' => 'rico\yii2images\Module',
             //be sure, that permissions ok
             //if you cant avoid permission errors you have to create "images" folder in web root manually and set 777 permissions
-            'imagesStorePath' => 'upload/store', //path to origin images
-            'imagesCachePath' => 'upload/cache', //path to resized copies
+            'imagesStorePath' => 'uploads/store', //path to origin images
+            'imagesCachePath' => 'uploads/cache', //path to resized copies
             'graphicsLibrary' => 'GD', //but really its better to use 'Imagick'
             'placeHolderPath' => '@webroot/images/placeHolder.png', // if you want to get placeholder when image not exists, string will be processed by Yii::getAlias
             'imageCompressionQuality' => 100, // Optional. Default value is 85.
         ],
     ],
     'components' => [
+        'glide' => [
+            'class' => 'trntv\glide\components\Glide',
+            'sourcePath' => '@app/web/uploads',
+            'cachePath' => '@runtime/glide',
+            'signKey' => '<random-key>' // "false" if you do not want to use HTTP signatures
+        ],
+        'image' => [
+            'class' => 'yii\image\ImageDriver',
+            'driver' => 'Imagick',  //GD or Imagick
+        ],
         'request' => [
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',

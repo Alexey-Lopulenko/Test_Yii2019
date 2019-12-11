@@ -29,7 +29,8 @@ $sessionActive = Yii::$app->session;
                     <div class="card flex-md-row mb-4 box-shadow h-md-250">
                         <img class="card-img-right flex-auto d-none d-md-block" data-src="holder.js/200x250?theme=thumb"
                              alt="Thumbnail [200x250]" style="width: 200px; height: 250px;"
-                             src="<?= $date->film->logo_img ?>" data-holder-rendered="true">
+                             src="<?= Yii::getAlias('@images') . '/' . $date->film->logo_img ?>"
+                             data-holder-rendered="true">
                         <div class="card-body d-flex flex-column align-items-start">
                             <strong class="d-inline-block mb-2 text-primary"><?= $date->film->title ?></strong>
                             <p class="card-text mb-auto"><?= $date->film->description ?></p>
