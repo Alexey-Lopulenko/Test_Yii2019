@@ -21,9 +21,16 @@ $gridColumns = [
 <div class="film-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+    <!--    --><?php
+    //    echo '<pre>';
+    //    print_r($dataProvider);
+    //    echo '</pre>';
+    //    ?>
     <p>
         <?= Html::a('Create Film', ['create'], ['class' => 'btn btn-success']) ?>
+    </p>
+    <p>
+        <?= Html::a('Get Excel', ['get-excel'], ['class' => 'btn btn-danger']) ?>
     </p>
 
 

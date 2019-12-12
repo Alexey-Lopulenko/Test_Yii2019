@@ -42,4 +42,9 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
+    <img src="<?php
+    if ($model['logo_img'] != '') {
+        echo \yii\helpers\Url::to(['film/glide', 'path' => 'images/film/' . $model['logo_img'], 'w' => 300]);
+    }
+    ?>">
 </div>

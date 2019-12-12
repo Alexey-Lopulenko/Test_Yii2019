@@ -12,6 +12,12 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
+        'glide' => [
+            'class' => 'trntv\glide\components\Glide',
+            'sourcePath' => '@app/web/uploads',
+            'cachePath' => '@runtime/glide',
+            'signKey' => false, // "false" if you do not want to use HTTP signatures
+        ],
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],

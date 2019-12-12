@@ -31,7 +31,8 @@
       "kartik-v/yii2-grid": "dev-master",
       "kartik-v/yii2-export": "@dev",
       "kartik-v/yii2-mpdf": "*",
-      "trntv/yii2-glide": "^1.2"
+      "trntv/yii2-glide": "^1.2",
+      "phpoffice/phpspreadsheet": "^1.10"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

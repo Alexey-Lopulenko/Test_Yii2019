@@ -19,10 +19,22 @@ use Yii;
 
 class TicketController extends Controller
 {
+
+    /**
+     * @return array
+     */
+    public function actions()
+    {
+        return [
+            'glide' => 'trntv\glide\actions\GlideAction'
+        ];
+    }
+
     /**
      * @return string
      */
-    public function actionIndex(){
+    public function actionIndex()
+    {
 
 
         $model = new ByForm();

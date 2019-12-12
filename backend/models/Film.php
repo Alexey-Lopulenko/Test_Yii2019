@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 use yii\web\UploadedFile;
 
 /**
@@ -31,7 +32,8 @@ class Film extends \yii\db\ActiveRecord
         return [
             'image' => [
                 'class' => 'rico\yii2images\behaviors\ImageBehave',
-            ]
+            ],
+            TimestampBehavior::className(),
         ];
     }
 

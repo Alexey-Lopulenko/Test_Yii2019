@@ -13,7 +13,9 @@ use kartik\file\FileInput;
 
 <div class="film-form">
 
+    <?php
 
+    ?>
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
@@ -36,6 +38,14 @@ use kartik\file\FileInput;
         ],
     ]); ?>
 
+    <img src="<?php
+    if ($model['logo_img'] != '') {
+        echo \yii\helpers\Url::to(['film/glide', 'path' => 'images/film/' . $model['logo_img'], 'w' => 150]);
+    }
+    ?>">
+    <p><br>
+        <? //= Html::a('Delete', ['test'=>$model['logo_img']], ['class' => 'btn btn-danger']) ?>
+    </p>
     <?= $form->field($model, 'image')->widget(FileInput::classname(), [
         'options' => ['accept' => 'image/*'],
     ]); ?>

@@ -25,20 +25,20 @@ if(!(isset($sessionActive['place_by_order']))){
 <?php
   /** @var \app\models\Film $film */
   foreach ($film as $film):?>
-      <div class="col-md-4" data-toggle="modal" data-target="#<?=$film->id?>" >
+      <div class="col-md-4" data-toggle="modal" data-target="#<?= $film->id ?>">
           <div class="product-item">
               <img style="width: 320px; height: 300px"
-                   src="<?php
+                   src="<?php //Yii::$app->glide->outputImage('images/film/'. $film->logo_img, ['w' => 188, 'fit' => 'fill']);
                    echo $film->logo_img ? '/test/backend/web/uploads/images/film/' . $film->logo_img : "https://i.ytimg.com/vi/Dm9Ekro7ubo/hqdefault.jpg";
-                   ?>" alt="<?=$film->title ?>">
+                   ?>" alt="<?= $film->title ?>">
               <div class="product-list d-inline">
-                  <h4><?=$film->title?></h4>
+                  <h4><?= $film->title ?></h4>
               </div>
           </div>
       </div>
       <?php Modal::begin([
 
-              'size' =>'modal-lg',
+          'size' => 'modal-lg',
               'header' => '<h2 class="text-center">'.$film->title.'</h2>',
           'id' => $film['id']
       ]);

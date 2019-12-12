@@ -2,8 +2,15 @@
 
 namespace backend\controllers;
 
+
+require '/var/www/html/test/vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 use Yii;
 use app\models\Film;
+use app\models\Order;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -26,7 +33,7 @@ class FilmController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['update', 'delete', 'create', 'import', 'test'],
+                        'actions' => ['update', 'delete', 'create', 'import', 'test', 'glide', 'export', 'get-excel'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -58,9 +65,60 @@ class FilmController extends Controller
     }
 
 
-    public function actionTest()
+    public function actionTest($img)
     {
-        return Yii::$app->glide->outputImage('12.jpg', ['w' => 100, 'fit' => 'crop']);
+        echo $img;
+    }
+
+    /**
+     * @return \yii\console\Response|\yii\web\Response
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function actionGetExcel()
+    {
+        //        $film = Film::find()->asArray()->all();
+        $film2 = Film::find()->all();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Film title doc');
+        $sheet->getColumnDimension('A')->setWidth(2);
+        $sheet->getColumnDimension('B')->setWidth(20);
+        $sheet->getColumnDimension('C')->setWidth(27);
+
+        $sheet->getStyle('1')
+            ->getFill()
+            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+            ->getStartColor()
+            ->setRGB('128, 0, 0');
+
+        $arrayData = [
+            ['id', 'title', 'description',],
+        ];
+        foreach ($film2 as $item) {
+            array_push($arrayData, [$item->id, $item->title, $item->description]);
+        }
+
+
+        $sheet->fromArray(
+            $arrayData,
+            NULL,
+            'A1'
+        );
+
+//            header ( "Expires: Mon, 1 Apr 1974 05:00:00 GMT" );
+//            header ( "Last-Modified: " . gmdate("D,d M YH:i:s") . " GMT" );
+//            header ( "Cache-Control: no-cache, must-revalidate");
+//            header ( "Pragma: no-cache" );
+//            header ( "Content-type: application/vnd.ms-excel" );
+//            header ( "Content-Disposition: attachment; filename=matrix.xls" );
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('uploads/files/film data.xlsx');
+
+
+        return \Yii::$app->response->sendFile('uploads/files/film data.xlsx');
     }
 
     /**
@@ -164,7 +222,9 @@ class FilmController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-
+    /**
+     * @return string
+     */
     public function actionUpload()
     {
         $model = new Film();
@@ -183,13 +243,13 @@ class FilmController extends Controller
 
     public function actionImport()
     {
-        $inputFile = 'upload/files/film_file.xlsx';
+        $inputFile = 'uploads/files/film_file.xlsx';
 
         try {
             $inputFileType = \PHPExcel_IOFactory::identify($inputFile);
             $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
             $objPHPExcel = $objReader->load($inputFile);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             die('Error');
         }
         $sheet = $objPHPExcel->getSheet(0);
