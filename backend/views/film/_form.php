@@ -38,14 +38,14 @@ use kartik\file\FileInput;
         ],
     ]); ?>
 
-    <img src="<?php
-    if ($model['logo_img'] != '') {
-        echo \yii\helpers\Url::to(['film/glide', 'path' => 'images/film/' . $model['logo_img'], 'w' => 150]);
-    }
-    ?>">
-    <p><br>
-        <? //= Html::a('Delete', ['test'=>$model['logo_img']], ['class' => 'btn btn-danger']) ?>
-    </p>
+    <?php if ($model['logo_img'] != ''): ?>
+        <img
+            src="<?php echo \yii\helpers\Url::to(['film/glide', 'path' => 'images/film/' . $model['logo_img'], 'w' => 250]); ?>">
+        <p><br>
+            <?= Html::a('Delete image', ['film/delete-img', 'img' => $model['logo_img']], ['class' => 'btn btn-danger']) ?>
+        </p>
+    <?php endif; ?>
+
     <?= $form->field($model, 'image')->widget(FileInput::classname(), [
         'options' => ['accept' => 'image/*'],
     ]); ?>

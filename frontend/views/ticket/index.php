@@ -47,7 +47,7 @@ if(!(isset($sessionActive['place_by_order']))){
 
       <img style="width: 150px; height: 150px"
            src="<?php
-           echo $film->logo_img ? '/test/backend/web/upload/images/film/prefix' . $film->logo_img : "https://i.ytimg.com/vi/Dm9Ekro7ubo/hqdefault.jpg";
+           echo $film->logo_img ? '/test/backend/web/uploads/images/film/' . $film->logo_img : "https://i.ytimg.com/vi/Dm9Ekro7ubo/hqdefault.jpg";
            ?>" alt="<?=$film->title ?>">
 
       <p>

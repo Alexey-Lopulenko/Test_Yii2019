@@ -33,7 +33,7 @@ class FilmController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['update', 'delete', 'create', 'import', 'test', 'glide', 'export', 'get-excel'],
+                        'actions' => ['update', 'delete', 'create', 'import', 'delete-img', 'glide', 'export', 'get-excel'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -65,9 +65,16 @@ class FilmController extends Controller
     }
 
 
-    public function actionTest($img)
+    public function actionDeleteImg($img)
     {
-        echo $img;
+
+        $film = Film::find()->where(['logo_img' => $img])->one();
+        $film->logo_img = null;
+        if (unlink(Yii::getAlias('@images') . '/' . $img)) {
+            if ($film->save()) {
+                return $this->redirect(['index']);
+            }
+        }
     }
 
     /**
@@ -201,6 +208,9 @@ class FilmController extends Controller
      */
     public function actionDelete($id)
     {
+        $img = Film::find()->where(['id' => $id])->asArray()->all();
+        unlink(Yii::getAlias('@images') . '/' . $img[0]['logo_img']);//delete file (logo)
+
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);

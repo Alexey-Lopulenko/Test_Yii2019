@@ -53,6 +53,7 @@ class Film extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'logo_img'], 'string', 'max' => 250],
+            [['title'], 'required'],
             [['description'], 'string', 'max' => 1000],
             [['image'], 'file'],//'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg'
         ];
@@ -102,28 +103,27 @@ class Film extends \yii\db\ActiveRecord
             if (is_file($dir . $this->logo_img)) {//проверка существует ли файл с таким же именем
                 unlink($dir . $this->logo_img);//удаление старого файла
             }
-            if (is_file($dir . '50x50/' . $this->logo_img)) {
-                unlink($dir . '50x50/' . $this->logo_img);
-            }
-            if (is_file($dir . '800x/' . $this->logo_img)) {
-                unlink($dir . '800x/' . $this->logo_img);
-            }
+//            if (is_file($dir . '50x50/' . $this->logo_img)) {
+//                unlink($dir . '50x50/' . $this->logo_img);
+//            }
+//            if (is_file($dir . '800x/' . $this->logo_img)) {
+//                unlink($dir . '800x/' . $this->logo_img);
+//            }
 
             $this->logo_img = strtotime('now') . '_' . Yii::$app->getSecurity()->generateRandomString(6) . '.' . $image->extension;//уникальное название файла
             $image->saveAs($dir . $this->logo_img);//сохранение файла
 
 
-            $imag = Yii::$app->image->load($dir . $this->logo_img);
-            $imag->background('#fff', 0);
-            $imag->resize('50', '50', Yii\image\drivers\Image::INVERSE);
-            $imag->crop('50', '50');
-            $imag->save($dir . '50x50/' . $this->logo_img, 90);
+//            $imag = Yii::$app->image->load($dir . $this->logo_img);
+//            $imag->background('#fff', 0);
+//            $imag->resize('50', '50', Yii\image\drivers\Image::INVERSE);
+//            $imag->crop('50', '50');
+//            $imag->save($dir . '50x50/' . $this->logo_img, 90);
 
-
-            $imag = Yii::$app->image->load($dir . $this->logo_img);
-            $imag->background('#fff', 0);
-            $imag->resize('800', null, Yii\image\drivers\Image::INVERSE);
-            $imag->save($dir . '800x/' . $this->logo_img, 90);
+//            $imag = Yii::$app->image->load($dir . $this->logo_img);
+//            $imag->background('#fff', 0);
+//            $imag->resize('800', null, Yii\image\drivers\Image::INVERSE);
+//            $imag->save($dir . '800x/' . $this->logo_img, 90);
         }
         return parent::beforeSave($insert);
     }

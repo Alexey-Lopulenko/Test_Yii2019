@@ -2,7 +2,7 @@
 <?php
 
 use yii\helpers\Html;
-
+use skeeks\widget\highcharts\Highcharts;
 
 
 /* @var $this yii\web\View */
@@ -10,7 +10,6 @@ use yii\helpers\Html;
 /** @var \app\models\Place $places */
 /** @var \app\models\Row $rows */
 /** @var  $id */
-
 
 $session_id_by_order = $id;
 ?>
@@ -40,8 +39,39 @@ $session_id_by_order = $id;
             ?>
         <?php endforeach; ?>
     </p>
-<?php endforeach; ?>
+<?php endforeach;
+echo '<br>';
+?>
 
+<?php
+
+echo '<div class="col-md-6" style="    position: absolute;
+    top: 0px;
+    right: 382px;">';
+echo Highcharts::widget([
+    'options' => [
+        'title' => [
+            'text' => 'Order statistic'
+        ],
+        'xAxis' => [
+            'categories' => [1, 2, 3, 4, 5, 6]
+        ],
+        'yAxis' => [
+            'title' => ['text' => 'subtitle']
+        ],
+        'series' => [
+            ['name' => 'test2',
+                'data' => [
+                    ['Draggable points', 117],
+                    ['Data module for database tables', 118],
+                    ['Draw lines over a stock chart', 134]
+                ]],
+        ],
+
+    ]
+]);
+echo '</div>';
+?>
 
 
 

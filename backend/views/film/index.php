@@ -4,6 +4,7 @@ use yii\helpers\Html;
 //use yii\grid\GridView;
 use kartik\export\ExportMenu;
 use kartik\grid\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -33,6 +34,13 @@ $gridColumns = [
         <?= Html::a('Get Excel', ['get-excel'], ['class' => 'btn btn-danger']) ?>
     </p>
 
+    <?php
+    $getRenderer = function ($view) {
+        return function ($model) use ($view) {
+            return $this->render($view, ['model' => $model]);
+        };
+    };
+    ?>
 
     <?=
     ExportMenu::widget([
@@ -49,11 +57,23 @@ $gridColumns = [
             'id',
             'title',
             'description',
-            'image',
+//            'logo_img',
+            [
+                'label' => 'logo_img',
+                'format' => 'raw',
+                'value' => function ($data) {
+                    return $data->logo_img ? Html::img(\yii\helpers\Url::to(['film/glide', 'path' => 'images/film/' . $data->logo_img, 'w' => 80, 'h' => 80]), [
+                        'alt' => 'logo',
+//                            'style' => 'width:50px;'
+                    ]) : 'please set image';
+                },
+
+            ],
             'created_at',
             //'updated_at',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+
 </div>
