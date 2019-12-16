@@ -33,7 +33,10 @@
       "kartik-v/yii2-mpdf": "*",
       "trntv/yii2-glide": "^1.2",
       "phpoffice/phpspreadsheet": "^1.10",
-      "skeeks/yii2-widget-highcharts": "dev-master"
+      "skeeks/yii2-widget-highcharts": "dev-master",
+      "unclead/yii2-multiple-input": "~2.0",
+      "wbraganca/yii2-dynamicform": "*",
+      "kartik-v/yii2-widget-datepicker": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

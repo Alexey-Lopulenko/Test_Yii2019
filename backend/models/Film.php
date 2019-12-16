@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\web\UploadedFile;
+use app\models\Comment;
 
 /**
  * This is the model class for table "film".
@@ -129,10 +130,10 @@ class Film extends \yii\db\ActiveRecord
     }
 
 
-    public function getSmallImage()
+    public function getComment()
     {
-//        $dir = str_replace('admin','',Url::home(true).'upload/images/film');
-        return '/test/backend/web/upload/images/film/prefix' . $this->logo_img;
+
+        return $this->hasMany(Comment::className(), ['id' => 'film_id']);
     }
 
 }
