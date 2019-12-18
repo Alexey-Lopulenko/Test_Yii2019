@@ -30,7 +30,7 @@ class m191216_144937_create_new_table_comment extends Migration
     public function up()
     {
 
-        echo "m191216_135935_new_table_comment be reverted.\n";
+//        echo "m191216_135935_new_table_comment be reverted.\n";
         $tableOptions = null;
 
         if ($this->db->driverName === 'mysql') {
@@ -68,7 +68,6 @@ class m191216_144937_create_new_table_comment extends Migration
 
     public function down()
     {
-        $this->dropTable('comment');
         $this->dropForeignKey(
             'user_id',
             'user'
@@ -77,6 +76,8 @@ class m191216_144937_create_new_table_comment extends Migration
             'film_id',
             'film'
         );
+        $this->dropTable('comment');
+
     }
 
 }
