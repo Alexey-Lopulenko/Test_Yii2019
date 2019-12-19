@@ -68,7 +68,7 @@ class Film extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'title' => 'Title',
-            'description' => 'Description',
+            'description' => 'Description ))',
             'image' => 'Image',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
@@ -134,6 +134,11 @@ class Film extends \yii\db\ActiveRecord
     {
 
         return $this->hasMany(Comment::className(), ['id' => 'film_id']);
+    }
+
+    public function getSmallImage()
+    {
+        return '/test/backend/web/upload/images/film/prefix' . $this->logo_img;
     }
 
 }

@@ -1,12 +1,12 @@
 <?php
 
+use app\models\Comment;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-//use yii\web\UploadedFile;
 use vova07\imperavi\Widget;
 use kartik\file\FileInput;
-use unclead\multipleinput\MultipleInput;
 use yii\helpers\ArrayHelper;
+
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Film */
@@ -14,6 +14,9 @@ use yii\helpers\ArrayHelper;
 
 /** @var \app\models\User $users_id */
 /** @var \app\models\Comment $comments */
+
+/** @var \app\models\User $users */
+/** @var \app\models\Comment $showComments */
 
 $js = <<<JS
 $(document).ready(function(){
@@ -37,20 +40,10 @@ CSS;
 $this->registerCss($css);
 
 
-//$user_id = ArrayHelper::map($users_id, 'id', 'username');
-//$params_user_id = [
-//    'prompt' => 'Username',
-//];
-//
-//
-//$film_id = ArrayHelper::map($model, 'id', 'title');
-//$params_film_id = [
-//    'prompt' => 'Film',
-//    'onchange' => '
-//                $.post("index.php?r=order/lists_date&id=' . '"+$(this).val(), function(data){
-//                    $("select#order-date_id").html(data);
-//                });',
-//];
+$user_id = ArrayHelper::map($users, 'id', 'username');
+$params_user_id = [
+    'prompt' => 'Username',
+];
 ?>
 <div class="bs-example">
     <ul class="nav nav-tabs" id="myTab">
@@ -91,7 +84,8 @@ $this->registerCss($css);
                 <?php if ($model['logo_img'] != ''): ?>
                     <img
                             src="<?php echo \yii\helpers\Url::to(['film/glide', 'path' => 'images/film/' . $model['logo_img'], 'w' => 250]); ?>">
-                    <p><br>
+                    <p>
+                        <br>
                         <?= Html::a('Delete image', ['film/delete-img', 'img' => $model['logo_img']], ['class' => 'btn btn-danger']) ?>
                     </p>
                 <?php endif; ?>
@@ -101,68 +95,38 @@ $this->registerCss($css);
                 ]); ?>
 
                 <div class="form-group">
+
                     <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+
+                    <?php ActiveForm::end(); ?>
+
                 </div>
-                <?php ActiveForm::end(); ?>
-                <hr>
-                <h3>Add comment</h3>
-                <div style="width: 700px;">
-                    <?= $form->field($model, 'schedule')->widget(MultipleInput::className(), [
-                        'max' => 4,
-                        'columns' => [
-                            [
-                                'name' => 'user_id',
-                                'type' => 'dropDownList',
-                                'title' => 'User',
-                                'defaultValue' => 1,
-                                'items' => [
-                                    1 => 'User 1',
-                                    2 => 'User 2'
-                                ]
-                            ],
-                            [
-                                'name' => 'priority',
-                                'title' => 'Priority',
-                                'enableError' => true,
-                                'options' => [
-                                    'class' => 'input-priority'
-                                ]
-                            ]
-                        ]
-                    ]);
-                    ?>
-                    <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-                </div>
-                <?php
-                echo '<pre>';
-                $test = $model->getComment();
-                print_r($test);
-                echo '</pre>';
-                ?>
+
             </div>
         </div>
         <!--endFilmSection-->
         <!--CommentSection-->
         <div id="sectionComment" class="tab-pane fade">
-            <h3>Comment</h3>
-            <div class="comment-form">
-                <!--                    --><?php
-                //                        foreach ($comments as $comment){
-                //                            echo '<pre>';
-                //                            echo $comment->comment.'<br>';
-                //                            echo '</pre>';
-                //                        }
-                //                    ?>
+            <div class="container-fluid">
+                <h3>Comment</h3>
+                <div class="comment-form">
+                    <?php
+                    $showComments = Comment::find()->where(['film_id' => $model->id])->all();
+                    echo $this->render('_comment', [
+                        'showComments' => $showComments,
+                        'filmId' => $model->id,
+                        'users' => $users,
+                        'model' => $model,
+                    ]) ?>
+                </div>
             </div>
         </div>
         <!--endCommentSection-->
         <!--TestSection-->
         <div id="sectionTest" class="tab-pane fade">
-            <h3>Section Test</h3>
-            <p>Vestibulum nec erat eu nulla rhoncus fringilla ut non neque. Vivamus nibh urna, ornare id gravida ut,
-                mollis a magna. Aliquam porttitor condimentum nisi, eu viverra ipsum porta ut. Nam hendrerit bibendum
-                turpis, sed molestie mi fermentum id. Aenean volutpat velit sem. Sed consequat ante in rutrum convallis.
-                Nunc facilisis leo at faucibus adipiscing.</p>
+            <h4>
+                test
+            </h4>
         </div>
         <!--endTestSection-->
     </div>

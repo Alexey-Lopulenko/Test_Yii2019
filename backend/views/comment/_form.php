@@ -40,6 +40,7 @@ $params_film_id = [
         'settings' => [
             'lang' => 'ru',
             'minHeight' => 200,
+            'style' => 'color:black',
             'plugins' => [
                 'clips',
                 'fullscreen',

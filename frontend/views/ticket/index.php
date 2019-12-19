@@ -14,11 +14,6 @@ if(!(isset($sessionActive['place_by_order']))){
 
 
     ?>
-<!--src="/var/www/html/test/backend/web/uploads/images/film/1575985349_JtqJxO.jpg"-->
-<!--src="/test/backend/web/uploads/images/film/prefix1575985349_JtqJxO.jpg"-->
-
-<!--src="/var/www/html/test/backend/web/uploads/images/film/1576079239__mPhlQ.jpg"-->
-<!--src="/test/backend/web/uploads/images/film/1576079239__mPhlQ.jpg"-->
 
 <h1 class="text-center">Film</h1>
 

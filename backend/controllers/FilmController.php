@@ -17,6 +17,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use app\models\User;
+use app\models\Comment;
 
 /**
  * FilmController implements the CRUD actions for Film model.
@@ -33,7 +35,19 @@ class FilmController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['update', 'delete', 'create', 'import', 'delete-img', 'glide', 'export', 'get-excel'],
+                        'actions' => [
+                            'update',
+                            'delete',
+                            'create',
+                            'import',
+                            'delete-img',
+                            'glide',
+                            'export',
+                            'get-excel',
+                            'delete-comment',
+                            'update-status',
+                            'save-comment',
+                        ],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -164,6 +178,8 @@ class FilmController extends Controller
     public function actionCreate()
     {
         $model = new Film();
+        $users = User::find()->all();
+//        $showComment = Comment::find()->all();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
 
@@ -175,6 +191,8 @@ class FilmController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'users' => $users,
+//            'showComment'=>$showComment,
         ]);
     }
 
@@ -189,13 +207,35 @@ class FilmController extends Controller
     {
         $model = $this->findModel($id);
         $film_id = Film::find()->all();
+        $users = User::find()->all();
+        $showComments = Comment::find()->where(['film_id' => $id])->all();
+
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $film = Yii::$app->request->post('Film');
+
+
+            if (array_key_exists('schedule', $film)) {
+                foreach ($film['schedule'] as $comment) {
+                    $commentModel = new Comment(['film_id' => $id]);
+
+                    $commentModel->user_id = $comment['user_id'];
+                    $commentModel->comment = $comment['comment'];
+                    if ($commentModel->save()) {
+//                        return $this->redirect(['view', 'id' => $model->id]);
+                    } else {
+                        echo 'Error, no save comment';
+                    }
+                }
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
             'film_id' => $film_id,
+            'users' => $users,
+            'showComments' => $showComments,
         ]);
     }
 
@@ -210,9 +250,7 @@ class FilmController extends Controller
     {
         $img = Film::find()->where(['id' => $id])->asArray()->all();
         unlink(Yii::getAlias('@images') . '/' . $img[0]['logo_img']);//delete file (logo)
-
         $this->findModel($id)->delete();
-
         return $this->redirect(['index']);
     }
 
@@ -278,5 +316,78 @@ class FilmController extends Controller
             print_r($film->getErrors());
         }
         die('okay');
+    }
+
+    /**
+     * @param $commentId
+     * @param $filmId
+     * @return string
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionDeleteComment($commentId, $filmId)
+    {
+
+
+        $commentDel = Comment::find()->where(['id' => $commentId])->one();
+        $commentDel->delete();
+
+        $model = new Film();
+        $users = User::find()->all();
+        $showComments = Comment::find()->where(['film_id' => $filmId])->all();
+
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('_comment', [
+                'showComments' => $showComments,
+                'filmId' => $filmId,
+                'model' => $model,
+                'users' => $users,
+            ]);
+        }
+    }
+
+
+    /**
+     * @param $commentId
+     * @param $filmId
+     * @return string
+     */
+    public function actionUpdateStatus($commentId, $filmId)
+    {
+        $comment = Comment::find()->where(['id' => $commentId])->one();
+
+        $model = new Film();
+        $users = User::find()->all();
+
+
+        if ($comment->status == 1) {
+            $comment->status = null;
+        } else {
+            $comment->status = (int)1;
+        }
+
+        if ($comment->save()) {
+            $showComments = Comment::find()->where(['film_id' => $filmId])->all();
+            if (Yii::$app->request->isAjax) {
+                return $this->renderAjax('_comment', [
+                    'showComments' => $showComments,
+                    'filmId' => $filmId,
+                    'model' => $model,
+                    'users' => $users,
+                ]);
+            } else {
+
+            }
+        } else {
+            return 'Error!<br>Status comment' . $comment->id . ' no update.';
+        }
+
+    }
+
+    public function actionSaveComment()
+    {
+        echo '<pre>';
+        print_r(Yii::$app->request->isPjax);
+        echo '</pre>';
     }
 }

@@ -56,13 +56,9 @@ $gridColumns = [
 
             'id',
             'title',
-            [
-                'label' => 'description',
-                'format' => 'raw',
-                'value' => function ($data) {
-                    return strip_tags($data->description);
-                }
-            ],
+            'description:html',
+//            'description:html',
+//         return strip_tags($data->description);
 //            'logo_img',
             [
                 'label' => 'logo_img',

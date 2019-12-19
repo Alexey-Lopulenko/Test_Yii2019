@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use app\models\CommentSearch;
 use Yii;
 use app\models\Comment;
 use yii\data\ActiveDataProvider;
@@ -37,12 +38,13 @@ class CommentController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Comment::find(),
-        ]);
+
+        $searchModel = new CommentSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
         ]);
     }
 
@@ -100,11 +102,21 @@ class CommentController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        return $this->render('update', [
-            'model' => $model,
-            'users_id' => $users_id,
-            'films' => $films
-        ]);
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('_form', [
+                'model' => $model,
+                'users_id' => $users_id,
+                'films' => $films
+            ]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+                'users_id' => $users_id,
+                'films' => $films
+            ]);
+        }
+
+
     }
 
     /**

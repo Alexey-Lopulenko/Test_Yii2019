@@ -81,6 +81,11 @@ class Comment extends \yii\db\ActiveRecord
         return $this->hasOne(Film::className(), ['id' => 'film_id']);
     }
 
+    public function getFilmTitle()
+    {
+        return (isset ($this->film)) ? $this->film->title : 'Error! Not set film title';
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
