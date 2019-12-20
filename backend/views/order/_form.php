@@ -32,7 +32,7 @@ $sessionActive = Yii::$app->session;
     $params_film_id = [
         'prompt' => 'Film',
         'onchange' => '
-                $.post("index.php?r=order/lists_date&id=' . '"+$(this).val(), function(data){
+                $.post("/test/backend/web/order/lists_date?id=' . '"+$(this).val(), function(data){
                     $("select#order-date_id").html(data);
                 });',
     ];
@@ -41,7 +41,7 @@ $sessionActive = Yii::$app->session;
     $params_date_id = [
         'prompt' => 'Date session',
         'onchange' => '
-                $.post("index.php?r=order/lists_session&id=' . '"+$(this).val(), function(data){
+                $.post("/test/backend/web/order/lists_session?id=' . '"+$(this).val(), function(data){
                     $("select#order-session_id").html(data);
                 });',
     ];
@@ -50,7 +50,7 @@ $sessionActive = Yii::$app->session;
     $params_session_id = [
         'prompt' => 'Session',
         'onchange' => '
-                $.post("index.php?r=order/lists_ticket&id=' . '"+$(this).val(), function(data){
+                $.post("/test/backend/web/order/lists_ticket?id=' . '"+$(this).val(), function(data){
                     $("div#order-ticket_id").html(data);
                 });',
     ];

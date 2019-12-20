@@ -320,29 +320,15 @@ class FilmController extends Controller
 
     /**
      * @param $commentId
-     * @param $filmId
-     * @return string
      * @throws \Throwable
      * @throws \yii\db\StaleObjectException
      */
-    public function actionDeleteComment($commentId, $filmId)
+    public function actionDeleteComment($commentId)
     {
+        if (Yii::$app->request->isGet) {
 
-
-        $commentDel = Comment::find()->where(['id' => $commentId])->one();
-        $commentDel->delete();
-
-        $model = new Film();
-        $users = User::find()->all();
-        $showComments = Comment::find()->where(['film_id' => $filmId])->all();
-
-        if (Yii::$app->request->isAjax) {
-            return $this->renderAjax('_comment', [
-                'showComments' => $showComments,
-                'filmId' => $filmId,
-                'model' => $model,
-                'users' => $users,
-            ]);
+            $commentDel = Comment::find()->where(['id' => $commentId])->one();
+            $commentDel->delete();
         }
     }
 
@@ -354,34 +340,21 @@ class FilmController extends Controller
      */
     public function actionUpdateStatus($commentId, $filmId)
     {
-        $comment = Comment::find()->where(['id' => $commentId])->one();
 
-        $model = new Film();
-        $users = User::find()->all();
-
-
-        if ($comment->status == 1) {
-            $comment->status = null;
-        } else {
-            $comment->status = (int)1;
-        }
-
-        if ($comment->save()) {
-            $showComments = Comment::find()->where(['film_id' => $filmId])->all();
-            if (Yii::$app->request->isAjax) {
-                return $this->renderAjax('_comment', [
-                    'showComments' => $showComments,
-                    'filmId' => $filmId,
-                    'model' => $model,
-                    'users' => $users,
-                ]);
+        if (Yii::$app->request->isGet) {
+            $comment = Comment::find()->where(['id' => $commentId])->one();
+            $model = new Film();
+            $users = User::find()->all();
+            if ($comment->status == 1) {
+                $comment->status = null;
             } else {
-
+                $comment->status = (int)1;
             }
-        } else {
-            return 'Error!<br>Status comment' . $comment->id . ' no update.';
-        }
+            $comment->save();
 
+        } else {
+            return 'Error!';
+        }
     }
 
     public function actionSaveComment()

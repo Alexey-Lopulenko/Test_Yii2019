@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content" id="content">
     <?php
 
     use yii\helpers\Html;
@@ -14,9 +14,6 @@
 
     $user_id = ArrayHelper::map($users, 'id', 'username');
     ?>
-
-
-
 
     <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
@@ -50,50 +47,59 @@
 
     </div>
     <?php ActiveForm::end(); ?>
-    <?php
-    Pjax::begin();
-    foreach ($showComments as $comment):?>
-        <?php $statusComment = $comment->status == 1 ? '#c5ced4' : '#585858' ?>
-        <div style="min-height: 100px; width: 900px; margin-top: 10px;    display: flex;">
-            <div class="col-md-2" style="min-height: 100px;background-color: #72787b;">
-                <span>userId: </span>
-                <h3><?= $comment->user_id . '<br>'; ?></h3>
+    <div id="commentContent">
+        <?php
+
+        foreach ($showComments as $comment):?>
+            <?php $statusComment = $comment->status == 1 ? '#c5ced4' : '#585858' ?>
+            <div style="min-height: 100px; width: 900px; margin-top: 10px;    display: flex;" id="<?= $comment->id ?>">
+                <div class="col-md-2" style="min-height: 100px;background-color: #72787b;">
+                    <span>userId: </span>
+                    <h3><?= $comment->user_id . '<br>'; ?></h3>
+                </div>
+                <div class="col-md-6 text-left"
+                     style="min-height: 100px;background-color:  <?= $statusComment ?>;min-width: 900px">
+                    <?= '<br>' . $comment->comment . '<br><br><br>' . date('Y-m-d H:i:s', $comment->created_at) . '<br>'; ?>
+
+                    <?= Html::button('<i class="glyphicon glyphicon-remove-circle"></i>', [
+                        'class' => 'btn btn-danger',
+                        'style' => '    position: absolute;top: 7px; left: 850px;',
+                        'commentId' => $comment->id,
+                        'filmId' => $filmId,
+                        'id' => 'js-delete-comment',
+                    ]) ?>
+                    <?php
+                    if (!$comment->status == 1) {
+                        echo Html::button('<i class="glyphicon glyphicon-ok-circle"></i>', [
+                            'class' => 'btn btn-success',
+                            'id' => 'js-update-comment',
+                            'commentId' => $comment->id,
+                            'filmId' => $filmId,
+                            'style' => 'position: absolute;top: 7px; left: 800px;',
+                        ]);
+                    } else {
+                        echo Html::button('<i class="glyphicon glyphicon-ban-circle"></i>', [
+                            'class' => 'btn btn-warning',
+                            'style' => 'position: absolute;top: 7px; left: 800px;',
+                            'id' => 'js-update-comment',
+                            'commentId' => $comment->id,
+                            'filmId' => $filmId,
+                        ]);
+                    }
+                    ?>
+                    <?= Html::button('<i class="glyphicon glyphicon-pencil"></i>', [
+                        'class' => 'btn btn-primary js-comment-btn',
+                        'id' => $comment->id,
+                        'style' => 'position: absolute;top: 7px; left: 750px;',
+                    ]) ?>
+
+                </div>
             </div>
-            <div class="col-md-6 text-left"
-                 style="min-height: 100px;background-color:  <?= $statusComment ?>;min-width: 900px">
-                <?= '<br>' . $comment->comment . '<br><br><br>' . date('Y-m-d H:i:s', $comment->created_at) . '<br>'; ?>
+        <?php endforeach; ?>
+    </div>
 
-                <?= Html::a('Delete <i class="glyphicon glyphicon-remove-circle"></i>', ['film/delete-comment', 'commentId' => $comment->id, 'filmId' => $filmId,], [
-                    'class' => 'btn btn-danger',
-                    'style' => '    position: absolute;top: 7px; left: 800px;',
-                ]) ?>
-                <?php
-                if (!$comment->status == 1) {
-                    echo Html::a('Enable <i class="glyphicon glyphicon-ok-circle"></i>', ['film/update-status', 'commentId' => $comment->id, 'filmId' => $filmId,], [
-                        'class' => 'btn btn-success',
-                        'style' => 'position: absolute;top: 47px; left: 800px;',
-                    ]);
-                } else {
-                    echo Html::a('Disable <i class="glyphicon glyphicon-ban-circle"></i>', ['film/update-status', 'commentId' => $comment->id, 'filmId' => $filmId], [
-                        'class' => 'btn btn-warning',
-                        'style' => '    position: absolute;top: 47px; left: 800px;',
-                    ]);
-                }
-                ?>
-                <?= Html::button('<i class="glyphicon glyphicon-pencil"></i>', [
-                    'class' => 'btn btn-primary js-comment-btn',
-                    'id' => $comment->id,
-                    'style' => 'position: absolute;top: 7px; left: 750px;',
-                ]) ?>
-
-            </div>
-        </div>
-    <?php endforeach; ?>
-
-    <?php Pjax::end(); ?>
-
-
-    <div class="modal modal-info" id="refactor-comment" style="display: none; padding-right: 15px;color:black">
+    <!--modal start-->
+    <div class="modal modal-info" id="refactor-comment" style="display: none; padding-right: 15px;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -111,24 +117,81 @@
             </div>
         </div>
     </div>
-
+    <!--modal end-->
 
     <?php
-    $url = Yii::$app->urlManager->createUrl(['comment/update', 'id' => '']);
+    $urlCommentUpdate = Yii::$app->urlManager->createUrl(['comment/update', 'id' => '']);
+    $urlUpdateStatus = Yii::$app->urlManager->createUrl(['film/update-status', 'commentId' => '', 'filmId' => '']);
+    $urlDeleteComment = Yii::$app->urlManager->createUrl(['film/delete-comment', 'commentId' => '']);
 
     $jsRefactorComment = <<<JS
-
-
 $('body').on('click', '.js-comment-btn', function(){
     var  data  = $(this).attr('id');
     
     $('#refactor-comment').modal('show');
     $('#refactor-comment').find('.modal-title').text(data);
-    $('#refactor-comment').find('.modal-body').load('$url' +data);
-      // alert('click '+dataDelete);
+    $('#refactor-comment').find('.modal-body').load('$urlCommentUpdate' +data);
+      
       console.log(data);
-    
+});
 
+$('body').on('click','#js-update-comment', function() {
+ var commentId = $(this).attr('commentId');
+ var filmId = $(this).attr('filmId');
+
+ 
+  if($(this).hasClass('btn-success')){
+        $(this).html('<i class="glyphicon glyphicon-ban-circle"></i>');
+        $(this).toggleClass('btn-warning').removeClass('btn-success');
+        // console.log('btn-success');
+    }else{
+      
+        $(this).html('<i class="glyphicon glyphicon-ok-circle"></i>');
+        $(this).toggleClass('btn-success').removeClass('btn-warning');
+       
+        // console.log('btn-warning');
+  }
+ 
+   $.ajax({
+    url:'$urlUpdateStatus',
+    data : {
+        commentId: commentId,
+        filmId: filmId
+    },
+    type : "GET",
+
+     success: function(res) {
+        console.log('success');
+         },
+     error: function() { alert('Error!'); }
+   });
+});
+
+$('body').on('click','#js-delete-comment', function() {
+ var commentId = $(this).attr('commentId');
+ 
+ 
+    var answer = confirm("Are you sure you want to delete this item?"); 
+     if (answer){ 
+        $("div#"+commentId).remove();
+           $.ajax({
+            url:'$urlDeleteComment',
+            data : {
+            commentId: commentId,
+            },
+            type : "GET",
+
+            success: function(res) {
+            console.log('success');
+                },
+             error: function() { console.log('Error Ajax not send!') }
+   });
+     } 
+     else 
+     { 
+        console.log('Delete failed'); 
+     } 
+     
 });
 JS;
     $this->registerJs($jsRefactorComment);
