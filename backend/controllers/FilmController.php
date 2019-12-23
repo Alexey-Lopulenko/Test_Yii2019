@@ -19,6 +19,7 @@ use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use app\models\User;
 use app\models\Comment;
+use app\models\Genre;
 
 /**
  * FilmController implements the CRUD actions for Film model.
@@ -47,6 +48,7 @@ class FilmController extends Controller
                             'delete-comment',
                             'update-status',
                             'save-comment',
+                            'set-genre',
                         ],
                         'allow' => true,
                         'roles' => ['admin'],
@@ -362,5 +364,16 @@ class FilmController extends Controller
         echo '<pre>';
         print_r(Yii::$app->request->isPjax);
         echo '</pre>';
+    }
+
+    public function actionSetGenre($id)
+    {
+//        $genre = Genre::findOne(4);
+//        var_dump($genre->films);
+
+        $film = $this->findModel($id);
+        return $this->render('', [
+
+        ]);
     }
 }

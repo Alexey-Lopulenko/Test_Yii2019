@@ -5,3 +5,4 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 # otherwise forward the request to index.php
 RewriteRule . index.php
+Redirect 301 /admin http://localhost/test/backend/web/

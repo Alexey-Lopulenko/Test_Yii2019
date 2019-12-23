@@ -37,7 +37,8 @@
       "unclead/yii2-multiple-input": "~2.0",
       "wbraganca/yii2-dynamicform": "*",
       "kartik-v/yii2-widget-datepicker": "dev-master",
-      "nesbot/carbon": "^2.27"
+      "nesbot/carbon": "^2.27",
+      "kartik-v/yii2-widget-select2": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

@@ -1,20 +1,19 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Comment;
-
+use app\models\FilmAndGenre;
 
 /**
- * CommentSearch represents the model behind the search form of `app\models\Comment`.
+ * FilmAndGenreSearch represents the model behind the search form of `app\models\FilmAndGenre`.
  */
-class CommentSearch extends Comment
+class FilmAndGenreSearch extends FilmAndGenre
 {
 
     public $film_title;
-
+    public $genre_title;
 
     /**
      * {@inheritdoc}
@@ -22,8 +21,8 @@ class CommentSearch extends Comment
     public function rules()
     {
         return [
-            [['id', 'user_id', 'film_id', 'created_at', 'updated_at'], 'integer'],
-            [['comment', 'film_title'], 'safe'],
+            [['id', 'film_id', 'genre_id'], 'integer'],
+            [['genre_title', 'film_title'], 'safe'],
         ];
     }
 
@@ -36,7 +35,6 @@ class CommentSearch extends Comment
         return Model::scenarios();
     }
 
-
     /**
      * Creates data provider instance with search query applied
      *
@@ -46,17 +44,13 @@ class CommentSearch extends Comment
      */
     public function search($params)
     {
-        $query = Comment::find()->joinWith(['film']);//film - метод getFilm(связь)
+        $query = FilmAndGenre::find()->joinWith(['film', 'genre']);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'forcePageParam' => false,
-                'pageSizeParam' => false,
-                'pageSize' => 4
-            ]
+
         ]);
 
         $dataProvider->setSort([
@@ -65,8 +59,13 @@ class CommentSearch extends Comment
                     'asc' => ['film.title' => SORT_ASC],
                     'desc' => ['film.title' => SORT_DESC],
                     'default' => SORT_ASC,
-                    'label' => 'Film title',
-                ]
+                ],
+                'genre_title' => [
+                    'asc' => ['genre.title' => SORT_ASC],
+                    'desc' => ['genre.title' => SORT_DESC],
+                    'default' => SORT_ASC,
+
+                ],
             ]),
         ]);
 
@@ -75,24 +74,18 @@ class CommentSearch extends Comment
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
-
             return $dataProvider;
         }
 
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'user_id' => $this->user_id,
             'film_id' => $this->film_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'genre_id' => $this->genre_id,
         ]);
 
-        $query->andFilterWhere(['like', 'comment', $this->comment])
-            ->andFilterWhere(['like', 'film.title', $this->film_title]);//правило фильтрации film-таблица, title-поле
-        ;
-//        $query->andFilterWhere(['LIKE', 'film_id.film_title', $this->getAttribute('film_id.film_title')]);
-
+        $query->andFilterWhere(['like', 'film.title', $this->film_title])//правило фильтрации film-таблица, title-поле
+        ->andFilterWhere(['like', 'genre.title', $this->genre_title]);
         return $dataProvider;
     }
 }

@@ -6,6 +6,7 @@ use yii\widgets\ActiveForm;
 use vova07\imperavi\Widget;
 use kartik\file\FileInput;
 use yii\helpers\ArrayHelper;
+use kartik\select2\Select2;
 
 
 /* @var $this yii\web\View */
@@ -60,6 +61,47 @@ $params_user_id = [
 
                 ?>
                 <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+
+                <?php
+                $test = $model->genre;
+                //                echo '<pre>';
+                var_dump($test);
+                //                echo '</pre>';
+
+                $data = [
+                    "red" => "red",
+                    "green" => "green",
+                    "blue" => "blue",
+                    "orange" => "orange",
+                    "white" => "white",
+                    "black" => "black",
+                    "purple" => "purple",
+                    "cyan" => "cyan",
+                    "teal" => "teal"
+                ];
+
+                var_dump($data);
+
+
+                echo '<label class="control-label">Genre</label>';
+                echo Select2::widget([
+                    'name' => 'color_3',
+                    'value' => $data, // initial value
+                    'data' => $data,
+                    'maintainOrder' => true,
+                    'toggleAllSettings' => [
+                        'selectLabel' => '<i class="fas fa-ok-circle"></i> Tag All',
+                        'unselectLabel' => '<i class="fas fa-remove-circle"></i> Untag All',
+                        'selectOptions' => ['class' => 'text-success'],
+                        'unselectOptions' => ['class' => 'text-danger'],
+                    ],
+                    'options' => ['placeholder' => 'Select a genre...', 'multiple' => true],
+                    'pluginOptions' => [
+                        'tags' => true,
+                        'maximumInputLength' => 10
+                    ],
+                ]);
+                ?>
 
                 <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
