@@ -57,50 +57,19 @@ $params_user_id = [
         <div id="sectionFilm" class="tab-pane fade in active">
             <div class="film-form">
 
-                <?php
-
-                ?>
                 <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-                <?php
-                $test = $model->genre;
-                //                echo '<pre>';
-                var_dump($test);
-                //                echo '</pre>';
-
-                $data = [
-                    "red" => "red",
-                    "green" => "green",
-                    "blue" => "blue",
-                    "orange" => "orange",
-                    "white" => "white",
-                    "black" => "black",
-                    "purple" => "purple",
-                    "cyan" => "cyan",
-                    "teal" => "teal"
-                ];
-
-                var_dump($data);
-
-
-                echo '<label class="control-label">Genre</label>';
-                echo Select2::widget([
-                    'name' => 'color_3',
-                    'value' => $data, // initial value
-                    'data' => $data,
-                    'maintainOrder' => true,
-                    'toggleAllSettings' => [
-                        'selectLabel' => '<i class="fas fa-ok-circle"></i> Tag All',
-                        'unselectLabel' => '<i class="fas fa-remove-circle"></i> Untag All',
-                        'selectOptions' => ['class' => 'text-success'],
-                        'unselectOptions' => ['class' => 'text-danger'],
-                    ],
+                <?= $form->field($model, 'genre')->widget(Select2::className(), [
+                    'data' => ArrayHelper::map(\app\models\Genre::find()->all(), 'id', 'title'),
+                    'language' => 'en',
                     'options' => ['placeholder' => 'Select a genre...', 'multiple' => true],
                     'pluginOptions' => [
+                        'allowClear' => true,
                         'tags' => true,
                         'maximumInputLength' => 10
                     ],
-                ]);
+                ])
+
                 ?>
 
                 <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>

@@ -71,6 +71,7 @@ $gridColumns = [
                 },
 
             ],
+            ['attribute' => 'genres', 'value' => 'genresAsString'],
             'created_at',
             //'updated_at',
 

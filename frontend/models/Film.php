@@ -64,4 +64,14 @@ class Film extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Date::className(), ['film_id' => 'id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getGenres()
+    {
+        return $this->hasMany(Genre::className(), ['id' => 'genre_id'])
+            ->viaTable('film_and_genre', ['film_id' => 'id']);
+    }
 }

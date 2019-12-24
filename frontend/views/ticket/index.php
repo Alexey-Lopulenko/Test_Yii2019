@@ -37,25 +37,33 @@ if(!(isset($sessionActive['place_by_order']))){
               'header' => '<h2 class="text-center">'.$film->title.'</h2>',
           'id' => $film['id']
       ]);
-        $sessionActive['id_film_by_order'] = $film->id;
+      $sessionActive['id_film_by_order'] = $film->id;
       ?>
 
       <img style="width: 150px; height: 150px"
            src="<?php
            echo $film->logo_img ? '/test/backend/web/uploads/images/film/' . $film->logo_img : "https://i.ytimg.com/vi/Dm9Ekro7ubo/hqdefault.jpg";
-           ?>" alt="<?=$film->title ?>">
+           ?>" alt="<?= $film->title ?>">
 
       <p>
-          <?=$film->description?>
+          <?php
+          echo '<strong>Genre:</strong><br>';
+          foreach ($film->genres as $one) {
+              echo $one->title . '<br>';
+          }
+          ?>
+          <?php
+          echo '<strong>Description:</strong><br>';
+          echo $film->description ?>
       </p>
 
       <?php
       $date_arr = [];
       /** @var \app\models\Date $date */
-      foreach ($date as $dates){
-          if($film->id == $dates->film_id){
+      foreach ($date as $dates) {
+          if ($film->id == $dates->film_id) {
 
-              $date_arr[$dates->id]=$dates->date_session;
+              $date_arr[$dates->id] = $dates->date_session;
           }
       }?>
 
