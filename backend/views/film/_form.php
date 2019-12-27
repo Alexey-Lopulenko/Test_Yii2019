@@ -69,7 +69,6 @@ $params_user_id = [
                         'maximumInputLength' => 10
                     ],
                 ])
-
                 ?>
 
                 <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
@@ -94,7 +93,7 @@ $params_user_id = [
 
                 <?php if ($model['logo_img'] != ''): ?>
                     <img
-                            src="<?php echo \yii\helpers\Url::to(['film/glide', 'path' => 'images/film/' . $model['logo_img'], 'w' => 250]); ?>">
+                            src="<?php echo \yii\helpers\Url::to(['film/glide', 'path' => 'images/film/' . $model['logo_img'], 'w' => 300, 'h' => 200, 'fit' => 'crop']); ?>">
                     <p>
                         <br>
                         <?= Html::a('Delete image', ['film/delete-img', 'img' => $model['logo_img']], ['class' => 'btn btn-danger']) ?>

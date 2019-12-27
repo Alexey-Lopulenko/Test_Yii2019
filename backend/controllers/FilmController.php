@@ -181,7 +181,7 @@ class FilmController extends Controller
     {
         $model = new Film();
         $users = User::find()->all();
-//        $showComment = Comment::find()->all();
+
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
 
@@ -194,7 +194,7 @@ class FilmController extends Controller
         return $this->render('create', [
             'model' => $model,
             'users' => $users,
-//            'showComment'=>$showComment,
+
         ]);
     }
 

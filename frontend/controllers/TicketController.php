@@ -4,6 +4,8 @@
 namespace frontend\controllers;
 
 
+use app\models\FilmAndGenre;
+use app\models\Genre;
 use app\models\Order;
 use app\models\Place;
 use app\models\Row;
@@ -14,7 +16,6 @@ use app\models\Film;
 use app\models\Date;
 use app\models\Session;
 use Yii;
-
 
 
 class TicketController extends Controller
@@ -44,7 +45,8 @@ class TicketController extends Controller
         $ticket = Ticket::find()->all();
         $place = Place::find()->orderBy(['id' => SORT_ASC])->all();
         $row = Row::find()->all();
-
+        $genres = Genre::find()->all();
+        $filmGenres = FilmAndGenre::find()->all();
 
         return $this->render('index', [
             'model' => $model,
@@ -54,6 +56,8 @@ class TicketController extends Controller
             'ticket' => $ticket,
             'place' => $place,
             'row' => $row,
+            'genres' => $genres,
+            'filmGenres' => $filmGenres,
         ]);
     }
 
@@ -105,6 +109,20 @@ class TicketController extends Controller
             'sessions' => $sessions,
             'tickets' => $tickets,
             'orders' => $orders,
+
+        ]);
+    }
+
+
+    public function actionFilmGenre($idGenre)
+    {
+
+        $filmGenre = FilmAndGenre::find()->where(['genre_id' => $idGenre])->all();
+        $genres = Genre::find()->all();
+
+        return $this->render('genre', [
+            'filmGenre' => $filmGenre,
+            'genres' => $genres,
         ]);
     }
 

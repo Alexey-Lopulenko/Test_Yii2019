@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\data\Sort;
+use yii\helpers\ArrayHelper;
+use yii\db\Expression;
 
 
 /**
@@ -74,4 +77,55 @@ class Film extends \yii\db\ActiveRecord
         return $this->hasMany(Genre::className(), ['id' => 'genre_id'])
             ->viaTable('film_and_genre', ['film_id' => 'id']);
     }
+
+
+    /**
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getSimilarFilms()
+    {
+        $genres = $this->genres;
+        $arrGenres = [];
+        $arrFilmId = [];
+        foreach ($genres as $genre) {
+            array_push($arrGenres, $genre->id);
+        }
+
+        $filmGenre = FilmAndGenre::find()->where(['in', 'genre_id', $arrGenres])->andWhere(['not in', 'film_id', $this->id])->all();
+
+        foreach ($filmGenre as $item) {
+            array_push($arrFilmId, $item->film->id);
+        }
+
+        $arrId = array_count_values($arrFilmId);//массив где индекс это `id` а значение - число повторений
+
+        arsort($arrId);//сортировка по значению
+        $arrSortId = array_keys($arrId);//запись ключей в качестве элементов
+
+        if ($arrId) {
+            return Film::find()->where(['in', 'id', $arrSortId])->orderBy([new Expression('FIELD (id, ' . implode(',', $arrSortId) . ')')])->all();//вывод с сортировкой
+
+        } else {
+            return Film::find()->where(['in', 'id', $arrSortId])->orderBy(['id' => $arrSortId])->all();
+        }
+    }
+
+    /**
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getSimilarFilms2()
+    {
+        $arrGenres = ArrayHelper::getColumn($this->genres, 'id');
+
+        $query = Film::find()->leftJoin('film_and_genre', '`film`.`id` = `film_and_genre`.`film_id`');
+        $query->where(['in', 'genre_id', $arrGenres]);
+        $query->andWhere(['!=', 'film_id', $this->id]);
+
+        $query->orderBy(new Expression('(
+        SELECT COUNT(*) FROM `film_and_genre` WHERE `genre_id` IN (' . implode(',', $arrGenres) . ') AND `film_id` = film.id
+        ) DESC, film.title ASC'));
+
+        return $query->all();
+    }
+
 }
